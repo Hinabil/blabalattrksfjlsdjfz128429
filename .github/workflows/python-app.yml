@@ -2,7 +2,8 @@ name: Automate Absen
 
 on:
   schedule:
-    - cron: '0 9 * * *'  # Jalankan setiap hari pukul 09:00 UTC
+    - cron: '30 1 * * *' # Jalankan setiap hari pukul 8.30  wib
+    - cron: '30 7 * * *' # Jalankan setiap hari pukul 14.30 wib
 
 jobs:
   automate-absen:
