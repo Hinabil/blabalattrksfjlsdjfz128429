@@ -17,6 +17,18 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y google-chrome-stable  # Instal Google Chrome
 
+- name: Install ChromeDriver
+  run: |
+    # Ambil versi utama Chrome yang terinstal
+    CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)
+    # Dapatkan versi ChromeDriver yang cocok
+    DRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+    # Unduh ChromeDriver
+    wget -q "https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp/
+    # Ekstrak ChromeDriver ke lokasi yang bisa diakses
+    unzip /tmp/chromedriver_linux64.zip -d /usr/local/bin/
+    chmod +x /usr/local/bin/chromedriver
+    rm /tmp/chromedriver_linux64.zip
 
     - name: Set up Python
       uses: actions/setup-python@v4
