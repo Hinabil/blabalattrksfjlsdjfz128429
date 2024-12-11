@@ -1,0 +1,43 @@
+name: Automate Absen
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # Jalankan setiap 15 menit
+  workflow_dispatch:  # Opsi untuk menjalankan secara manual dari GitHub UI
+jobs:
+  automate-absen:
+    runs-on: ubuntu-latest  # Server berbasis Linux
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3  # Ambil kode dari repositori
+
+    - name: Install Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable  # Instal Google Chrome
+
+- name: Install ChromeDriver
+  run: |
+    # Ambil versi utama Chrome yang terinstal
+    CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)
+    # Dapatkan versi ChromeDriver yang cocok
+    DRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+    # Unduh ChromeDriver
+    wget -q "https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp/
+    # Ekstrak ChromeDriver ke lokasi yang bisa diakses
+    unzip /tmp/chromedriver_linux64.zip -d /usr/local/bin/
+    chmod +x /usr/local/bin/chromedriver
+    rm /tmp/chromedriver_linux64.zip
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'  # Tentukan versi Python
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt  # Install pustaka Python seperti Selenium
+
+    - name: Run Python script
+      run: python Absen.py  # Jalankan file Python Anda
