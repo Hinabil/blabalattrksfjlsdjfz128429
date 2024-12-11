@@ -32,8 +32,10 @@ def otomatis_absen():
         time.sleep(5)
         
         # Klik tombol absen
-        driver.find_element(By.ID, "//*[@id='konfirmasi-kehadiran']").click()  # Ganti ID sesuai elemen di situs
-        time.sleep(5)
+        driver.find_element(By.XPATH, "//button[text()='Konfirmasi Kehadiran']").click()
+        time.sleep(3)
+        driver.find_element(By.XPATH, "//button[text()='Konfirmasi']").click() 
+        time.sleep(3)
         
         print("Absen berhasil!")
     except Exception as e:
