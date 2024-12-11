@@ -1,6 +1,6 @@
-from selenium import webdriver # type: ignore
-from selenium.webdriver.common.by import By # type: ignore
-from selenium.webdriver.common.keys import Keys # type: ignore
+from selenium import webdriver 
+from selenium.webdriver.common.by import By 
+from selenium.webdriver.common.keys import Keys 
 import time
 
 # Konfigurasi
@@ -10,8 +10,16 @@ url_login = "https://simkuliah.usk.ac.id/"  # URL halaman login
 url_absen = "https://simkuliah.usk.ac.id/index.php/absensi"  # URL halaman absen
 
 # Path ke driver (download sesuai browser yang digunakan)
-driver = webdriver.Chrome()
-driver.get("C:\absen project\chromedriver-win64\chromedriver.exe")
+chrome_options = Options()
+chrome_options.add_argument('--headless')  # Jalankan dalam mode headless (tanpa GUI)
+chrome_options.add_argument('--no-sandbox')  # Opsional untuk sistem Linux
+chrome_options.add_argument('--disable-dev-shm-usage')  # Opsional untuk mencegah error memori
+
+# Tentukan lokasi ChromeDriver
+service = Service('/usr/local/bin/chromedriver')  # Path ChromeDriver di GitHub runner
+
+# Inisialisasi driver
+driver = webdriver.Chrome(service=service, options=chrome_options)
 
 def otomatis_absen():
     
