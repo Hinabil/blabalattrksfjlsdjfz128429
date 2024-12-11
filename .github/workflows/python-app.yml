@@ -21,9 +21,14 @@ jobs:
       run: |
         wget -N "https://storage.googleapis.com/chrome-for-testing-public/131.0.6778.108/linux64/chromedriver-linux64.zip" -P /tmp/
         sudo apt-get install -y unzip
-        unzip /tmp/chromedriver_linux64.zip -d /usr/local/bin/
-        rm /tmp/chromedriver_linux64.zip
+        unzip /tmp/chromedriver-linux64.zip -d /usr/local/bin/
+        chmod +x /usr/local/bin/chromedriver
+        rm /tmp/chromedriver-linux64.zip
 
+    - name: Verify Installations
+      run: |
+        google-chrome --version
+        chromedriver --version
 
     - name: Set up Python
       uses: actions/setup-python@v4
