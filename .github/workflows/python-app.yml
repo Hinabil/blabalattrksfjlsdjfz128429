@@ -15,8 +15,8 @@ jobs:
     - name: Install Chrome
       run: |
         sudo apt-get update
-        sudo apt-get install -y google-chrome-stable  # Instal Google Chrome
-
+        sudo apt-get install -y google-chrome-stable
+        
     - name: Install ChromeDriver
       run: |
     # Ambil versi utama Chrome yang terinstal
