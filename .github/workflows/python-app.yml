@@ -2,7 +2,8 @@ name: Automate Absen
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # Jalankan setiap 2 jam
+    - cron: '*/15 * * * *'  # Jalankan setiap 15 menit
+  workflow_dispatch:  # Opsi untuk menjalankan secara manual dari GitHub UI
 jobs:
   automate-absen:
     runs-on: ubuntu-latest  # Server berbasis Linux
