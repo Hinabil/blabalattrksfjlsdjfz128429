@@ -19,12 +19,11 @@ jobs:
 
     - name: Install ChromeDriver
       run: |
-        CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1)  # Versi utama Chrome
-        DRIVER_VERSION=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}") || exit 1
-        wget -N "https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip" -P /tmp/ || exit 1
+        wget -N "https://chromedriver.storage.googleapis.com/131.0.6778.85/chromedriver_linux64.zip" -P /tmp/
         sudo apt-get install -y unzip
-        unzip /tmp/chromedriver_linux64.zip -d /usr/local/bin/ || exit 1
+        unzip /tmp/chromedriver_linux64.zip -d /usr/local/bin/
         rm /tmp/chromedriver_linux64.zip
+
 
     - name: Set up Python
       uses: actions/setup-python@v4
