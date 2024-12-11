@@ -9,7 +9,16 @@ password = "15927386"  # Ganti dengan password Anda
 url_login = "https://simkuliah.usk.ac.id/"  # URL halaman login
 url_absen = "https://simkuliah.usk.ac.id/index.php/absensi"  # URL halaman absen
 
-driver = webdriver.Chrome("/usr/local/bin/chromedriver")
+chrome_service = Service("/usr/local/bin/chromedriver")
+
+# Opsi Chrome
+chrome_options = Options()
+chrome_options.add_argument("--headless")  # Menjalankan tanpa GUI (opsional untuk server)
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
+
+# Inisialisasi WebDriver
+driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
 def otomatis_absen():
     
