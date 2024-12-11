@@ -2,7 +2,7 @@ name: Automate Absen
 
 on:
   schedule:
-    - cron: '0 */2 * * *'  # Jalankan setiap 2 jam
+    - cron: '*/15 * * * *'  # Jalankan setiap 2 jam
 jobs:
   automate-absen:
     runs-on: ubuntu-latest  # Server berbasis Linux
