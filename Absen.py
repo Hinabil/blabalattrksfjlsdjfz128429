@@ -9,9 +9,7 @@ password = "15927386"  # Ganti dengan password Anda
 url_login = "https://simkuliah.usk.ac.id/"  # URL halaman login
 url_absen = "https://simkuliah.usk.ac.id/index.php/absensi"  # URL halaman absen
 
-
-service = Service("/usr/local/bin/chromedriver")
-driver = webdriver.Chrome(service=service)
+driver = webdriver.Chrome("/usr/local/bin/chromedriver")
 
 def otomatis_absen():
     
