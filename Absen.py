@@ -9,17 +9,11 @@ password = "15927386"  # Ganti dengan password Anda
 url_login = "https://simkuliah.usk.ac.id/"  # URL halaman login
 url_absen = "https://simkuliah.usk.ac.id/index.php/absensi"  # URL halaman absen
 
-# Path ke driver (download sesuai browser yang digunakan)
-chrome_options = Options()
-chrome_options.add_argument('--headless')  # Jalankan dalam mode headless (tanpa GUI)
-chrome_options.add_argument('--no-sandbox')  # Opsional untuk sistem Linux
-chrome_options.add_argument('--disable-dev-shm-usage')  # Opsional untuk mencegah error memori
-
 # Tentukan lokasi ChromeDriver
 service = Service('/usr/local/bin/chromedriver')  # Path ChromeDriver di GitHub runner
 
 # Inisialisasi driver
-driver = webdriver.Chrome(service=service, options=chrome_options)
+driver = webdriver.Chrome(service)
 
 def otomatis_absen():
     
