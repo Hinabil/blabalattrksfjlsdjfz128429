@@ -28,23 +28,33 @@ def otomatis_absen(nama, username, password):
         time.sleep(2)
 
         # Masukkan username dan password
-        driver.find_element(By.XPATH, "//input[@class='form-control' and @placeholder='NIP/NPM']").send_keys(username)  # Ganti ID sesuai elemen di situs
-        driver.find_element(By.XPATH, "//input[@class='form-control' and @placeholder='Password']").send_keys(password)  # Ganti ID sesuai elemen di situs
-        driver.find_element(By.XPATH, "//button[text()='Login']").click()  # Ganti ID sesuai elemen di situs
-        time.sleep(3)
-        print(f"Berhasil login untuk username: {nama}")
+        driver.get(url_login)
+
+        # Tunggu elemen login tersedia
+        WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.XPATH, "//input[@class='form-control' and @placeholder='NIP/NPM']"))
+        ).send_keys(username)
+        WebDriverWait(driver, 5).until(
+            EC.presence_of_element_located((By.XPATH, "//input[@class='form-control' and @placeholder='Password']"))
+        ).send_keys(password)
+        WebDriverWait(driver, 5).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[text()='Login']"))
+        ).click()
+        print(f"Berhasil login untuk username: {username}")
 
         # Buka halaman absen
         driver.get(url_absen)
-        time.sleep(5)
-
         # Klik tombol absen
-        driver.find_element(By.XPATH, "//button[text()='Konfirmasi Kehadiran']").click()
-        time.sleep(3)
-        driver.find_element(By.XPATH, "//button[text()='Konfirmasi']").click()
-        time.sleep(3)
+        WebDriverWait(driver, 5).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[text()='Konfirmasi Kehadiran']"))
+        ).click()
+        WebDriverWait(driver, 5).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[text()='Konfirmasi']"))
+        ).click()
 
         print(f"Absen berhasil untuk : {nama}")
+    except TimeoutException:
+        print(f"Elemen tidak muncul untuk username {username}, absen gagal.")
     except Exception as e:
         print(f"Terjadi kesalahan untuk {nama}: {e}")
 
