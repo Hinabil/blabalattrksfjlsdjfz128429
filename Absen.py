@@ -11,6 +11,7 @@ import csv
 # Konfigurasi
 url_login = "https://simkuliah.usk.ac.id/"  # URL halaman login
 url_absen = "https://simkuliah.usk.ac.id/index.php/absensi"  # URL halaman absen
+url_logout = "https://simkuliah.usk.ac.id/index.php/login/logout"
 
 chrome_service = Service("/usr/local/bin/chromedriver")
 
@@ -64,11 +65,13 @@ def absen(nama):
         ).click()
 
         print(f"Absen berhasil untuk: {nama}")
+        driver.get(url_logout)
     except TimeoutException:
         print(f"Absen belum ada untuk: {nama}")
+        driver.get(url_logout)
     except Exception as e:
         print(f"Terjadi kesalahan saat absen untuk {nama}: {e}")
-
+        driver.get(url_logout)
 # Membaca file CSV dan menjalankan otomatis absen untuk setiap user
 try:
     with open("user.csv", "r") as file:
