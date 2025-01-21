@@ -1,7 +1,8 @@
 name: Automate Absen
 
 on:
-  
+  schedule:
+    - cron: '10 * * * *'  # Jalankan setiap jam (0 pada setiap jam)
   workflow_dispatch:  # Opsi untuk menjalankan secara manual dari GitHub UI
 jobs:
   automate-absen:
