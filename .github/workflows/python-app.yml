@@ -2,15 +2,15 @@ name: Automate Absen
 
 on:
   schedule:
-    - cron: '10 * * * *'  # Jalankan setiap jam (0 pada setiap jam)
-  workflow_dispatch:  # Opsi untuk menjalankan secara manual dari GitHub UI
+    - cron: '10 * * * *' #otomatis
+  workflow_dispatch:  # Jalan manual
 jobs:
   automate-absen:
-    runs-on: ubuntu-latest  # Server berbasis Linux
+    runs-on: ubuntu-latest  # akses pakai server linux
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3  # Ambil kode dari repositori
+      uses: actions/checkout@v3  # install repo
 
     - name: Install Chrome
       run: |
@@ -34,11 +34,11 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.x'  # Tentukan versi Python
+        python-version: '3.x'  # versi python
 
     - name: Install dependencies
       run: |
         pip install -r requirements.txt  # Install pustaka Python seperti Selenium
 
     - name: Run Python script
-      run: python Absen.py  # Jalankan file Python Anda
+      run: python Absen.py  # run file py
