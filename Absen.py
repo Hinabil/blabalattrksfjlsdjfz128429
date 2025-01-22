@@ -30,13 +30,13 @@ def login(nama, username, password):
         driver.get(url_login)
 
         # Tunggu elemen login tersedia dan masukkan username serta password
-        WebDriverWait(driver, 2).until(
+        WebDriverWait(driver, 3).until(
             EC.presence_of_element_located((By.XPATH, "//input[@class='form-control' and @placeholder='NIP/NPM']"))
         ).send_keys(username)
-        WebDriverWait(driver, 2).until(
+        WebDriverWait(driver, 3).until(
             EC.presence_of_element_located((By.XPATH, "//input[@class='form-control' and @placeholder='Password']"))
         ).send_keys(password)
-        WebDriverWait(driver, 2).until(
+        WebDriverWait(driver, 3).until(
             EC.element_to_be_clickable((By.XPATH, "//button[text()='Login']"))
         ).click()
 
@@ -55,12 +55,12 @@ def absen(nama):
         driver.get(url_absen)
 
         # Tunggu dan klik tombol "Konfirmasi Kehadiran"
-        WebDriverWait(driver, 2).until(
+        WebDriverWait(driver, 3).until(
             EC.element_to_be_clickable((By.XPATH, "//button[text()='Konfirmasi Kehadiran']"))
         ).click()
 
         # Tunggu dan klik tombol "Konfirmasi"
-        WebDriverWait(driver, 2).until(
+        WebDriverWait(driver, 3).until(
             EC.element_to_be_clickable((By.XPATH, "//button[text()='Konfirmasi']"))
         ).click()
 
