@@ -1,0 +1,17 @@
+name: Run Dependabot Manually
+
+on:
+  workflow_dispatch:  # Menambahkan opsi manual
+
+jobs:
+  run-dependabot:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Trigger Dependabot Updates
+      run: |
+        curl -X POST \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }}/dependabot/updates \
+          -d '{"update_type":"all"}'
