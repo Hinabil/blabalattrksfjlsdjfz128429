@@ -13,7 +13,7 @@ url_login = "https://simkuliah.usk.ac.id/index.php/login"  # URL halaman login
 url_absen = "https://simkuliah.usk.ac.id/index.php/absensi"  # URL halaman absen
 url_logout = "https://simkuliah.usk.ac.id/index.php/login/logout"
 
-chrome_service = Service("C:/path/to/chromedriver.exe")  # Ganti dengan path ChromeDriver di sistem Anda
+chrome_service = Service("/usr/local/bin/chromedriver")
 
 # Opsi Chrome
 chrome_options = Options()
@@ -23,6 +23,7 @@ chrome_options.add_argument("--disable-dev-shm-usage")
 
 # Inisialisasi WebDriver
 driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
+
 driver.set_window_size(1920, 1080)
 
 def take_screenshot(step, nama):
@@ -30,12 +31,12 @@ def take_screenshot(step, nama):
     screenshot_name = f"screenshot_{nama}_{step}.png"
     driver.save_screenshot(screenshot_name)
     print(f"Screenshot diambil: {screenshot_name}")
-
+    
 def login(nama, username, password):
     try:
         # Buka halaman login
         driver.get(url_login)
-
+        
         take_screenshot("login_page", nama)
 
         # Tunggu elemen login tersedia dan masukkan username serta password
@@ -48,16 +49,16 @@ def login(nama, username, password):
         WebDriverWait(driver, 3).until(
             EC.element_to_be_clickable((By.XPATH, "//button[text()='Login']"))
         ).click()
-
-        take_screenshot("login_berhasil", nama)  # Ambil screenshot setelah login berhasil
+        
+        take_screenshot("login_berhasil", nama)
         print(f"Login berhasil untuk: {nama}")
         return True
     except TimeoutException:
-        take_screenshot("login_gagal", nama)  # Ambil screenshot jika login gagal
+        take_screenshot("login_gagal", nama)
         print(f"Login tidak berhasil untuk: {nama}")
         return False
     except Exception as e:
-        take_screenshot("login_error", nama)  # Ambil screenshot jika terjadi kesalahan
+        take_screenshot("login_error", nama)
         print(f"Terjadi kesalahan saat login untuk {nama}: {e}")
         return False
 
@@ -70,32 +71,29 @@ def absen(nama):
         WebDriverWait(driver, 3).until(
             EC.element_to_be_clickable((By.XPATH, "//button[text()='Konfirmasi Kehadiran']"))
         ).click()
-
-        take_screenshot("konfirmasi_kehadiran", nama)  # Ambil screenshot setelah konfirmasi kehadiran
+        take_screenshot("konfirmasi_kehadiran", nama)
 
         # Tunggu dan klik tombol "Konfirmasi"
         WebDriverWait(driver, 3).until(
             EC.element_to_be_clickable((By.XPATH, "//button[text()='Konfirmasi']"))
         ).click()
-
-        take_screenshot("konfirmasi_berhasil", nama)  # Ambil screenshot setelah konfirmasi berhasil
+        take_screenshot("konfirmasi_berhasil", nama)
 
         WebDriverWait(driver, 3).until(
             EC.element_to_be_clickable((By.XPATH, "//button[text()='OK']"))
         ).click()
+        take_screenshot("absen_ok", nama)
 
-        take_screenshot("absen_ok", nama)  # Ambil screenshot setelah absen selesai
         print(f"Absen berhasil untuk: {nama}")
         driver.get(url_logout)
     except TimeoutException:
-        take_screenshot("absen_gagal", nama)  # Ambil screenshot jika absen gagal
+        take_screenshot("absen_belum_ada", nama)
         print(f"Absen belum ada untuk: {nama}")
         driver.get(url_logout)
     except Exception as e:
-        take_screenshot("absen_error", nama)  # Ambil screenshot jika terjadi kesalahan saat absen
+        take_screenshot("absen_error", nama)
         print(f"Terjadi kesalahan saat absen untuk {nama}: {e}")
         driver.get(url_logout)
-
 # Membaca file CSV dan menjalankan otomatis absen untuk setiap user
 try:
     with open("user.csv", "r") as file:
