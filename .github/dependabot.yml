@@ -11,3 +11,11 @@ updates:
       interval: "weekly"  # Pembaruan dilakukan setiap minggu
     commit-message:
       prefix: "fix"  # Menambahkan awalan "fix" pada pesan commit pembaruan
+      
+# Konfigurasi untuk memperbarui GitHub Actions workflows
+  - package-ecosystem: "github-actions"  # Menentukan pembaruan workflow GitHub Actions
+    directory: "/.github/workflow/"  # Lokasi file workflows
+    schedule:
+      interval: "weekly"  # Pembaruan dilakukan setiap minggu
+    commit-message:
+      prefix: "chore"  # Menambahkan awalan "chore" pada pesan commit pembaruan
