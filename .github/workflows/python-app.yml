@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@latest  # install repo
+      uses: actions/checkout@v3  # install repo
 
     - name: Install Chrome
       run: |
@@ -47,7 +47,7 @@ jobs:
       run: python Absen.py  # run file py
       
     - name: Upload screenshots
-      uses: actions/upload-artifact@latest
+      uses: actions/upload-artifact@v3
       with:
         name: screenshots
         path: screenshots/
