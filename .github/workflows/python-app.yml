@@ -10,7 +10,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3  # install repo
+      uses: actions/checkout@v4  # install repo
 
     - name: Install Chrome
       run: |
