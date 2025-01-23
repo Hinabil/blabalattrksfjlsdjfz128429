@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 import csv
+import os
 
 # Konfigurasi
 url_login = "https://simkuliah.usk.ac.id/index.php/login"  # URL halaman login
@@ -26,11 +27,13 @@ driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
 driver.set_window_size(1920, 1080)
 
+os.makedirs("screenshots", exist_ok=True)
+
 def take_screenshot(step, nama):
-    """Fungsi untuk mengambil screenshot dan menyimpannya dengan nama yang sesuai."""
-    screenshot_name = f"screenshot_{nama}_{step}.png"
-    driver.save_screenshot(screenshot_name)
-    print(f"Screenshot diambil: {screenshot_name}")
+    """Ambil screenshot dan simpan dengan nama file sesuai proses."""
+    filename = f"screenshots/{nama}_{step}.png"
+    driver.save_screenshot(filename)
+    print(f"Screenshot diambil: {filename}")
     
 def login(nama, username, password):
     try:
