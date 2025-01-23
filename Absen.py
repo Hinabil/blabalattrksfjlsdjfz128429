@@ -22,6 +22,9 @@ chrome_options.add_argument("--disable-dev-shm-usage")
 # Inisialisasi WebDriver
 driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
 
+#setel ukuran layar hd
+driver.set_window_size(1920, 1080)
+                       
 # Direktori untuk menyimpan screenshot
 os.makedirs("screenshots", exist_ok=True)
 
@@ -52,15 +55,16 @@ def login(nama, username, password):
         return True
     except Exception as e:
         take_screenshot("login_error", nama)
-        print(f"Terjadi kesalahan saat login untuk {nama}: {e}")
+        print(f"Login tidak berhasil untuk {nama}: {e}")
         return False
 
 def absen(nama):
     try:
         # Buka halaman absen
         driver.get(url_absen)
+        time.sleep(1)
         take_screenshot("absen_page", nama)
-        time.sleep(2)  # Tunggu halaman memuat
+        time.sleep(1)  # Tunggu halaman memuat
 
         # Klik tombol "Konfirmasi Kehadiran"
         driver.find_element(By.XPATH, "//button[text()='Konfirmasi Kehadiran']").click()
@@ -76,8 +80,8 @@ def absen(nama):
         driver.get(url_logout)
         take_screenshot("logout", nama)
     except Exception as e:
-        take_screenshot("absen_error", nama)
-        print(f"Terjadi kesalahan saat absen untuk {nama}: {e}")
+        take_screenshot("absen_belum ada/error", nama)
+        print(f"Belum ada absen untuk {nama}")
         driver.get(url_logout)
 
 # Membaca file CSV dan menjalankan otomatis absen untuk setiap user
