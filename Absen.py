@@ -2,9 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+import time
 import csv
 import os
 
@@ -39,24 +37,19 @@ def login(nama, username, password):
         driver.get(url_login)
         take_screenshot("login_page", nama)
 
-        # Tunggu elemen login tersedia dan masukkan username serta password
-        WebDriverWait(driver, 3).until(
-            EC.presence_of_element_located((By.XPATH, "//input[@class='form-control' and @placeholder='NIP/NPM']"))
-        ).send_keys(username)
-        WebDriverWait(driver, 3).until(
-            EC.presence_of_element_located((By.XPATH, "//input[@class='form-control' and @placeholder='Password']"))
-        ).send_keys(password)
-        WebDriverWait(driver, 3).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[text()='Login']"))
-        ).click()
+        # Masukkan username dan password
+        time.sleep(2)  # Tunggu halaman memuat
+        driver.find_element(By.XPATH, "//input[@class='form-control' and @placeholder='NIP/NPM']").send_keys(username)
+        driver.find_element(By.XPATH, "//input[@class='form-control' and @placeholder='Password']").send_keys(password)
 
+        # Klik tombol login
+        time.sleep(1)
+        driver.find_element(By.XPATH, "//button[text()='Login']").click()
+
+        time.sleep(2)  # Tunggu proses login selesai
         take_screenshot("login_success", nama)
         print(f"Login berhasil untuk: {nama}")
         return True
-    except TimeoutException:
-        take_screenshot("login_failed", nama)
-        print(f"Login tidak berhasil untuk: {nama}")
-        return False
     except Exception as e:
         take_screenshot("login_error", nama)
         print(f"Terjadi kesalahan saat login untuk {nama}: {e}")
@@ -67,26 +60,21 @@ def absen(nama):
         # Buka halaman absen
         driver.get(url_absen)
         take_screenshot("absen_page", nama)
+        time.sleep(2)  # Tunggu halaman memuat
 
-        # Tunggu dan klik tombol "Konfirmasi Kehadiran"
-        WebDriverWait(driver, 3).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[text()='Konfirmasi Kehadiran']"))
-        ).click()
+        # Klik tombol "Konfirmasi Kehadiran"
+        driver.find_element(By.XPATH, "//button[text()='Konfirmasi Kehadiran']").click()
+        time.sleep(1)  # Tunggu tombol "Konfirmasi Kehadiran" diproses
         take_screenshot("absen_confirm_button", nama)
 
-        # Tunggu dan klik tombol "Konfirmasi"
-        WebDriverWait(driver, 3).until(
-            EC.element_to_be_clickable((By.XPATH, "//button[text()='Konfirmasi']"))
-        ).click()
+        # Klik tombol "Konfirmasi"
+        driver.find_element(By.XPATH, "//button[text()='Konfirmasi']").click()
+        time.sleep(2)  # Tunggu konfirmasi selesai
         take_screenshot("absen_success", nama)
 
         print(f"Absen berhasil untuk: {nama}")
         driver.get(url_logout)
         take_screenshot("logout", nama)
-    except TimeoutException:
-        take_screenshot("absen_timeout", nama)
-        print(f"Absen belum ada untuk: {nama}")
-        driver.get(url_logout)
     except Exception as e:
         take_screenshot("absen_error", nama)
         print(f"Terjadi kesalahan saat absen untuk {nama}: {e}")
