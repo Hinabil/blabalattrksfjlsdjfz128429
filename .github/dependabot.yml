@@ -19,3 +19,5 @@ updates:
       interval: "weekly"  # Pembaruan dilakukan setiap minggu
     commit-message:
       prefix: "chore"  # Menambahkan awalan "chore" pada pesan commit pembaruan
+    allow:
+      - type: "direct-manual" # Opsi agar bisa berjalan manual
