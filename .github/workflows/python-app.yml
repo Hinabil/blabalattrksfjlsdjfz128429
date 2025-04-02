@@ -1,35 +1,51 @@
-name: Automate Absen (Docker)
+name: Automate Absen
 
 on:
   schedule:
-    - cron: '*/30 0-15 * * *'  # Jalankan setiap 30 menit dari jam 07:00-15:59 WIB
+    - cron: '*/30 0-15 * * *' #otomatis
   workflow_dispatch:  # Jalan manual
-
 jobs:
   automate-absen:
-    runs-on: ubuntu-latest
-    container:
-      image: python:3.11-slim  # Gunakan Python container
+    runs-on: ubuntu-latest  # akses pakai server linux
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4  # Ambil kode dari repo
+      uses: actions/checkout@v4  # install repo
 
-    - name: Install Docker
+    - name: Install Chrome
       run: |
-        apt-get update
-        apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
-        add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-        apt-get update
-        apt-get install -y docker-ce docker-ce-cli containerd.io
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable  
 
-    - name: Build Docker Image
-      run: docker build -t absen-bot .
+    - name: Install ChromeDriver
+      run: |
+        wget -N "https://storage.googleapis.com/chrome-for-testing-public/134.0.6998.88/linux64/chromedriver-linux64.zip" -P /tmp/
+        sudo apt-get install -y unzip
+        unzip /tmp/chromedriver-linux64.zip -d /tmp/
+        sudo mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/
+        sudo chmod +x /usr/local/bin/chromedriver
+        rm -rf /tmp/chromedriver-linux64.zip /tmp/chromedriver-linux64
 
-    - name: Run Docker Container
-      run: docker run --rm --name absen-bot absen-bot
+    - name: Verify Installations
+      run: |
+        google-chrome --version
+        chromedriver --version
 
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'  # versi python
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt  # Install pustaka Python seperti Selenium
+        
+    - name: Create screenshots directory
+      run: mkdir -p screenshots
+      
+    - name: Run Python script
+      run: python Absen.py  # run file py
+      
     - name: Upload screenshots
       uses: actions/upload-artifact@v4
       with:
