@@ -17,7 +17,7 @@ jobs:
 
     - name: Install Docker
       run: |
-        apt-get install -y docker.io
+        snap install docker
 
     - name: Build Docker Image
       run: docker build -t absen-bot .
