@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 import requests
 import base64
 import os
@@ -8,24 +8,6 @@ app = Flask(__name__)
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 GITHUB_REPO = os.environ.get("GITHUB_REPO")
 FILE_PATH = "user.csv"
-
-TEMPLATE = """
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Tambah User Absen</title>
-</head>
-<body>
-  <h1>Tambah User Baru</h1>
-  <form method="POST">
-    <input name="nama" placeholder="Nama" required><br>
-    <input name="username" placeholder="Username" required><br>
-    <input name="password" placeholder="Password" required><br>
-    <button type="submit">Tambah</button>
-  </form>
-</body>
-</html>
-"""
 
 def get_file_sha():
     url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{FILE_PATH}"
@@ -37,6 +19,8 @@ def get_file_sha():
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    status = None  # Variabel buat notif
+
     if request.method == "POST":
         nama = request.form["nama"]
         username = request.form["username"]
@@ -62,8 +46,8 @@ def index():
         put_res = requests.put(url, json=data, headers=headers)
         
         if put_res.status_code in [200, 201]:
-            return redirect("/")
+            status = "success"
         else:
-            return f"Gagal update file: {put_res.json()}", 400
+            status = "error"
 
-    return render_template_string(TEMPLATE)
+    return render_template("index.html", status=status)
