@@ -6,23 +6,23 @@ import os
 app = Flask(__name__)
 
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
-GITHUB_REPO = os.environ.get("GITHUB_REPO")  # contoh: "username/reponame"
+GITHUB_REPO = os.environ.get("GITHUB_REPO")
 FILE_PATH = "user.csv"
 
 TEMPLATE = """
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tambah User Absen</title>
+  <title>Tambah User Absen</title>
 </head>
 <body>
-    <h1>Tambah User</h1>
-    <form method="POST">
-        Nama: <input type="text" name="nama" required><br><br>
-        Username: <input type="text" name="username" required><br><br>
-        Password: <input type="password" name="password" required><br><br>
-        <input type="submit" value="Tambah">
-    </form>
+  <h1>Tambah User Baru</h1>
+  <form method="POST">
+    <input name="nama" placeholder="Nama" required><br>
+    <input name="username" placeholder="Username" required><br>
+    <input name="password" placeholder="Password" required><br>
+    <button type="submit">Tambah</button>
+  </form>
 </body>
 </html>
 """
@@ -67,8 +67,3 @@ def index():
             return f"Gagal update file: {put_res.json()}", 400
 
     return render_template_string(TEMPLATE)
-
-# buat Vercel recognize app
-def handler(event, context):
-    from vercel_wsgi import handle_wsgi
-    return handle_wsgi(app, event, context)
