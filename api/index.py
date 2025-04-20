@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
 import requests
 import base64
 import os
@@ -19,8 +19,6 @@ def get_file_sha():
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    status = None  # Variabel buat notif
-
     if request.method == "POST":
         nama = request.form["nama"]
         username = request.form["username"]
@@ -44,10 +42,14 @@ def index():
             "sha": sha
         }
         put_res = requests.put(url, json=data, headers=headers)
-        
-        if put_res.status_code in [200, 201]:
-            status = "success"
-        else:
-            status = "error"
 
-    return render_template("index.html", status=status)
+        if put_res.status_code in [200, 201]:
+            return redirect("/success")   # Redirect ke halaman sukses
+        else:
+            return "Gagal update file", 400
+
+    return render_template("index.html")
+
+@app.route("/success")
+def success():
+    return render_template("success.html")
