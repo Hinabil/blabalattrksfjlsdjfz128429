@@ -33,7 +33,7 @@ HTML_TEMPLATE = '''
 </html>
 '''
 
-CSV_FILE = os.path.join(os.path.dirname(__file__), '..', 'user.csv')
+CSV_FILE = '/tmp/user.csv'
 
 if not os.path.exists(CSV_FILE):
     with open(CSV_FILE, mode='w', newline='') as file:
