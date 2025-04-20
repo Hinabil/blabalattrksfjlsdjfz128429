@@ -1,3 +1,4 @@
 selenium==4.30.0
 Flask
 requests
+vercel-wsgi
