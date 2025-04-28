@@ -1,3 +1,5 @@
 selenium==4.31.0
 Flask
 requests
+psycopg2-binary
+python-dotenv
