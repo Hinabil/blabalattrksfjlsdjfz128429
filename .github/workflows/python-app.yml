@@ -48,7 +48,7 @@ jobs:
         NEON_DB: neondb
         NEON_USER: neondb_owner
         NEON_PASSWORD: npg_wou3zV9hQSqM
-        NEON_HOST: ep-divine-haze-a1db3adx-pooler.ap-southeast-1.aws.neon.tech'
+        NEON_HOST: ep-divine-haze-a1db3adx-pooler.ap-southeast-1.aws.neon.tech
       run: python Absen.py  # run file py
       
     - name: Upload screenshots
