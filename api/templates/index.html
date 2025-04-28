@@ -1,67 +1,79 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tambah User Absen</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menambah User Absen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center py-10">
-
-  <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">Tambah User Baru</h1>
-
-    {% if status == "success" %}
-      <div class="mb-4 p-3 text-green-800 bg-green-200 rounded-lg text-center">
-        ✅ User berhasil ditambahkan!
-      </div>
-    {% elif status == "error" %}
-      <div class="mb-4 p-3 text-red-800 bg-red-200 rounded-lg text-center">
-        ❌ Gagal menambahkan user.
-      </div>
-    {% endif %}
-
-    <form method="POST" class="space-y-4" id="form">
-      <div>
-        <label for="nama" class="block mb-1 text-gray-700">Nama</label>
-        <input id="nama" name="nama" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-      </div>
-
-      <div>
-        <label for="username" class="block mb-1 text-gray-700">Username</label>
-        <input id="username" name="username" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-      </div>
-
-      <div>
-        <label for="password" class="block mb-1 text-gray-700">Password</label>
-        <input id="password" name="password" type="password" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">
-      </div>
-
-      <div class="relative">
-        <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center">
-          <span id="buttonText">Tambah</span>
-          <div id="spinner" class="ml-2 hidden">
-            <div class="loader ease-linear rounded-full border-4 border-t-4 border-white h-5 w-5"></div>
-          </div>
+<body>
+    <div class="admin-btn">
+        <button class="neon-button flex items-center gap-2" onclick="window.location.href='admin.html'">
+            <i class="bi bi-person-lock"></i>
+            <span class="hidden sm:inline">Admin Login</span>
         </button>
-      </div>
-    </form>
+    </div>
 
-  </div>
+    <div class="neon-border form-container pulse">
+        <div class="text-center mb-8">
+            <h1 class="neon-text text-3xl font-bold mb-2">MENAMBAH USER ABSEN</h1>
+            <p class="text-blue-300">Tambahkan data user baru</p>
+        </div>
+        
+        <form method="POST" action="/" class="space-y-6">
+            <div>
+                <label for="fullname" class="block text-sm font-medium text-blue-300 mb-2">FULL NAME</label>
+                <div class="relative">
+                    <input type="text" id="fullname" name="fullname" class="neon-input" required placeholder="Enter your full name">
+                    <i class="bi bi-person absolute right-3 top-3 text-blue-400"></i>
+                </div>
+            </div>
+            
+            <div>
+                <label for="username" class="block text-sm font-medium text-blue-300 mb-2">USERNAME</label>
+                <div class="relative">
+                    <input type="text" id="username" name="username" class="neon-input" required placeholder="Choose a username">
+                    <i class="bi bi-at absolute right-3 top-3 text-blue-400"></i>
+                </div>
+            </div>
+            
+            <div>
+                <label for="password" class="block text-sm font-medium text-blue-300 mb-2">PASSWORD</label>
+                <div class="relative">
+                    <input type="password" id="password" name="password" class="neon-input pr-10" required placeholder="Create a password">
+                    <span class="password-toggle" id="togglePassword">
+                        <i class="bi bi-eye" id="eyeIcon"></i>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="checkbox-container">
+                <input type="checkbox" id="terms" name="terms" required>
+                <span class="checkmark"></span>
+                <label for="terms" class="ml-2 text-sm text-blue-300">
+                    I agree to the <a href="#" class="text-blue-400 hover:underline">Terms and Conditions</a>
+                </label>
+            </div>
+            
+            <div class="pt-4">
+                <button type="submit" class="neon-button w-full py-3 flex items-center justify-center gap-2">
+                    <i class="bi bi-person-plus"></i>
+                    <span>TAMBAH USER</span>
+                </button>
+            </div>
+        </form>
+    </div>
 
-  <script>
-    const form = document.getElementById('form');
-    const submitBtn = document.getElementById('submitBtn');
-    const spinner = document.getElementById('spinner');
-    const buttonText = document.getElementById('buttonText');
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
 
-    form.addEventListener('submit', function() {
-      buttonText.textContent = "Loading...";
-      spinner.classList.remove('hidden');
-    });
-  </script>
-
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
