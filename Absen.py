@@ -31,10 +31,14 @@ os.makedirs("screenshots", exist_ok=True)
 # Koneksi ke NeonDB
 
 def get_db_connection():
-    db_url = f"postgresql://{os.getenv('NEON_USER')}:{os.getenv('NEON_PASSWORD')}@{os.getenv('NEON_HOST')}/{os.getenv('NEON_DB')}?sslmode=require"
-    conn = psycopg2.connect(db_url)
+    conn = psycopg2.connect(
+        dbname=os.environ["NEON_DB"],
+        user=os.environ["NEON_USER"],
+        password=os.environ["NEON_PASSWORD"],
+        host=os.environ["NEON_HOST"],
+        sslmode="require"
+    )
     return conn
-
 
 def take_screenshot(step, nama):
     filename = f"screenshots/{nama}_{step}.png"
