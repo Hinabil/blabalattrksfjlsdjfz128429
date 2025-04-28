@@ -7,6 +7,12 @@ on:
 jobs:
   automate-absen:
     runs-on: ubuntu-latest  # akses pakai server linux
+    
+    env:
+      NEON_DB: ${{ secrets.NEON_DB }}
+      NEON_USER: ${{ secrets.NEON_USER }}
+      NEON_PASSWORD: ${{ secrets.NEON_PASSWORD }}
+      NEON_HOST: ${{ secrets.NEON_HOST }}
 
     steps:
     - name: Checkout code
