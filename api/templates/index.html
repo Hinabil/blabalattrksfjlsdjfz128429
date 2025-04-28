@@ -32,6 +32,25 @@
             border-radius: 10px;
             background: rgba(10, 20, 40, 0.7);
             backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 0%,
+                rgba(0, 180, 255, 0.1) 50%,
+                transparent 100%
+            );
+            transform: rotate(0deg);
+            animation: rotateLight 15s linear infinite;
+            z-index: -1;
         }
         
         .neon-border:hover {
@@ -95,6 +114,15 @@
             }
             100% {
                 box-shadow: 0 0 0 0 rgba(0, 180, 255, 0);
+            }
+        }
+        
+        @keyframes rotateLight {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
             }
         }
         
@@ -178,6 +206,32 @@
             color: #00b4ff;
         }
         
+        /* Error styles */
+        .input-error {
+            border-color: #ff3860 !important;
+            box-shadow: 0 0 10px rgba(255, 56, 96, 0.5) !important;
+            background-color: rgba(60, 10, 20, 0.7) !important;
+        }
+        
+        .error-message {
+            color: #ff3860;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .checkbox-error .checkmark {
+            border-color: #ff3860 !important;
+            box-shadow: 0 0 5px rgba(255, 56, 96, 0.5) !important;
+        }
+        
+        .checkbox-error-text {
+            color: #ff3860;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
         @media (max-width: 640px) {
             .form-container {
                 padding: 20px;
@@ -201,7 +255,7 @@
     <!-- Main Form Container -->
     <div class="neon-border form-container pulse">
         <div class="text-center mb-8">
-            <h1 class="neon-text text-3xl font-bold mb-2">MENAMBAH USER ABSEN</h1>
+            <h1 class="text-2xl font-bold mb-2" style="color: #7f9cf5;">MENAMBAH USER ABSEN</h1>
             <p class="text-blue-300">Tambahkan data user baru</p>
         </div>
         
@@ -213,6 +267,7 @@
                     <input type="text" id="fullname" name="fullname" class="neon-input" required placeholder="Enter your full name">
                     <i class="bi bi-person absolute right-3 top-3 text-blue-400"></i>
                 </div>
+                <p id="fullname-error" class="error-message">Full name is required</p>
             </div>
             
             <!-- Username Field -->
@@ -222,7 +277,7 @@
                     <input type="text" id="username" name="username" class="neon-input" required placeholder="Choose a username">
                     <i class="bi bi-at absolute right-3 top-3 text-blue-400"></i>
                 </div>
-                <p class="text-xs text-blue-400 mt-1">Must be 4-20 characters</p>
+                <p id="username-error" class="error-message">Username is required</p>
             </div>
             
             <!-- Password Field with Toggle -->
@@ -234,16 +289,19 @@
                         <i class="bi bi-eye" id="eyeIcon"></i>
                     </span>
                 </div>
-                <p class="text-xs text-blue-400 mt-1">Must be at least 8 characters</p>
+                <p id="password-error" class="error-message">Password is required</p>
             </div>
             
             <!-- Terms and Conditions Checkbox -->
-            <div class="checkbox-container">
-                <input type="checkbox" id="terms" name="terms" required>
-                <span class="checkmark"></span>
-                <label for="terms" class="ml-2 text-sm text-blue-300">
-                    I agree to the <a href="#" class="text-blue-400 hover:underline">Terms and Conditions</a>
-                </label>
+            <div>
+                <div class="checkbox-container" id="terms-container">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <span class="checkmark"></span>
+                    <label for="terms" class="ml-2 text-sm text-blue-300">
+                        I agree to the <a href="#" class="text-blue-400 hover:underline">Terms and Conditions</a>
+                    </label>
+                </div>
+                <p id="terms-error" class="checkbox-error-text">You must agree to the terms</p>
             </div>
             
             <!-- Submit Button -->
@@ -263,6 +321,16 @@
         <div class="particle"></div>
         <div class="particle"></div>
         <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
     </div>
 
     <script>
@@ -270,28 +338,87 @@
         document.getElementById('signupForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Reset all error states
+            resetErrors();
+            
             // Get form values
-            const fullname = document.getElementById('fullname').value;
-            const username = document.getElementById('username').value;
+            const fullname = document.getElementById('fullname').value.trim();
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const terms = document.getElementById('terms').checked;
             
-            // Simple validation
-            if (!terms) {
-                alert('You must agree to the terms and conditions');
-                return;
+            // Validation flags
+            let isValid = true;
+            
+            // Validate full name
+            if (!fullname) {
+                showError('fullname', 'Full name is required');
+                isValid = false;
             }
             
-            // In a real app, you would send this data to your server
-            console.log('Form submitted:', { fullname, username, password });
+            // Validate username
+            if (!username) {
+                showError('username', 'Username is required');
+                isValid = false;
+            }
             
-            // Show success message
-            alert('User added successfully! ' + fullname + ' has been registered.');
+            // Validate password
+            if (!password) {
+                showError('password', 'Password is required');
+                isValid = false;
+            }
             
-            // Reset form
-            this.reset();
-            document.getElementById('terms').checked = false;
+            // Validate terms
+            if (!terms) {
+                showCheckboxError('terms', 'You must agree to the terms');
+                isValid = false;
+            }
+            
+            // If form is valid, proceed with submission
+            if (isValid) {
+                // In a real app, you would send this data to your server
+                console.log('Form submitted:', { fullname, username, password });
+                
+                // Redirect to success page
+                window.location.href = 'success.html?name=' + encodeURIComponent(fullname);
+            }
         });
+        
+        // Function to show error for input fields
+        function showError(fieldId, message) {
+            const input = document.getElementById(fieldId);
+            const errorElement = document.getElementById(fieldId + '-error');
+            
+            input.classList.add('input-error');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        // Function to show error for checkbox
+        function showCheckboxError(fieldId, message) {
+            const container = document.getElementById(fieldId + '-container');
+            const errorElement = document.getElementById(fieldId + '-error');
+            
+            container.classList.add('checkbox-error');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+        }
+        
+        // Function to reset all error states
+        function resetErrors() {
+            // Reset input errors
+            document.querySelectorAll('.neon-input').forEach(input => {
+                input.classList.remove('input-error');
+            });
+            
+            // Reset checkbox error
+            document.getElementById('terms-container').classList.remove('checkbox-error');
+            
+            // Hide all error messages
+            document.querySelectorAll('.error-message, .checkbox-error-text').forEach(error => {
+                error.style.display = 'none';
+            });
+        }
         
         // Password toggle visibility
         const togglePassword = document.getElementById('togglePassword');
@@ -321,6 +448,23 @@
                 // Trigger change event
                 const event = new Event('change');
                 checkbox.dispatchEvent(event);
+                
+                // Remove error if checked
+                if (checkbox.checked) {
+                    this.classList.remove('checkbox-error');
+                    document.getElementById('terms-error').style.display = 'none';
+                }
+            });
+        });
+        
+        // Real-time validation for inputs
+        document.querySelectorAll('.neon-input').forEach(input => {
+            input.addEventListener('input', function() {
+                this.classList.remove('input-error');
+                const errorElement = document.getElementById(this.id + '-error');
+                if (errorElement) {
+                    errorElement.style.display = 'none';
+                }
             });
         });
         
@@ -329,7 +473,7 @@
             const container = document.querySelector('.particles');
             if (!container) return;
             
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 30; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 
@@ -338,10 +482,10 @@
                 const posY = Math.random() * 100;
                 
                 // Random size
-                const size = Math.random() * 3 + 1;
+                const size = Math.random() * 4 + 1;
                 
                 // Random animation duration
-                const duration = Math.random() * 10 + 5;
+                const duration = Math.random() * 15 + 5;
                 const delay = Math.random() * 5;
                 
                 // Apply styles
