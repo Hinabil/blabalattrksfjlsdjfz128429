@@ -3,7 +3,9 @@ import requests
 import base64
 import os
 
-app = Flask(__name__)
+app = Flask(__name__,
+            template_folder='templates',
+            static_folder='static')
 
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 GITHUB_REPO = os.environ.get("GITHUB_REPO")
@@ -44,10 +46,10 @@ def index():
         put_res = requests.put(url, json=data, headers=headers)
 
         if put_res.status_code in [200, 201]:
-            return redirect("success.j2")   # Redirect ke halaman sukses
+            return render_template("success.j2")   # Redirect ke halaman sukses
         else:
             return "Gagal update file", 400
 
-    return render_template("index.html")
+    return app.send_static_file("index.html")
 
 
