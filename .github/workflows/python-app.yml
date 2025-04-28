@@ -45,10 +45,10 @@ jobs:
     
     - name: Run Python script
       env:
-        NEON_DB: ${{ secrets.NEON_DB }}
-        NEON_USER: ${{ secrets.NEON_USER }}
-        NEON_PASSWORD: ${{ secrets.NEON_PASSWORD }}
-        NEON_HOST: ${{ secrets.NEON_HOST }}
+        NEON_DB: neondb
+        NEON_USER: neondb_owner
+        NEON_PASSWORD: npg_wou3zV9hQSqM
+        NEON_HOST: ep-divine-haze-a1db3adx-pooler.ap-southeast-1.aws.neon.tech'
       run: python Absen.py  # run file py
       
     - name: Upload screenshots
