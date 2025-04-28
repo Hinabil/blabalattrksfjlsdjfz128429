@@ -21,7 +21,7 @@ def get_file_sha():
 
 @app.route("/")
 def index():
-    return app.send_static_file('hapus_barang.html')
+    return app.send_static_file("index.html")
 
 @app.route("/tambah_proses", methods=["POST"])
 def tambah():
