@@ -46,7 +46,8 @@ def index():
         put_res = requests.put(url, json=data, headers=headers)
 
         if put_res.status_code in [200, 201]:
-            return render_template("success.j2")   # Redirect ke halaman sukses
+            return render_template("success.j2",
+                                  username=nama)   # Redirect ke halaman sukses
         else:
             return "Gagal update file", 400
 
