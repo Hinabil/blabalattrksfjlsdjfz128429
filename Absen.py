@@ -92,7 +92,7 @@ def absen(nama):
 def get_users_from_db():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT nama, username, password FROM users WHERE aktif = TRUE")
+    cur.execute('SELECT nama, username, password FROM "data absen"')
     users = cur.fetchall()
     cur.close()
     conn.close()
