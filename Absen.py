@@ -32,10 +32,9 @@ os.makedirs("screenshots", exist_ok=True)
 
 def get_db_connection():
     conn = psycopg2.connect(
-        dbname=os.environ["NEON_DB"],
-        user=os.environ["NEON_USER"],
-        password=os.environ["NEON_PASSWORD"],
-        host=os.environ["NEON_HOST"],
+        user=os.environ["PGUSER"],
+        password=os.environ["PGPASSWORD"],
+        host=os.environ["PGHOST"],
         sslmode="require"
     )
     return conn
