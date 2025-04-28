@@ -19,8 +19,12 @@ def get_file_sha():
         return response.json()["sha"]
     return None
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def index():
+    return app.send_static_file('hapus_barang.html')
+
+@app.route("/tambah_proses", methods=["POST"])
+def tambah():
     if request.method == "POST":
         nama = request.form.get('fullname')
         username = request.form.get('username')
@@ -50,7 +54,4 @@ def index():
                                   username=nama)   # Redirect ke halaman sukses
         else:
             return "Gagal update file", 400
-
-    return app.send_static_file("index.html")
-
 
