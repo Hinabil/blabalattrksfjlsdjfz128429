@@ -36,6 +36,7 @@ def get_db_connection():
         user=os.getenv('NEON_USER'),
         password=os.getenv('NEON_PASSWORD'),
         port=5432
+        sslmode='require'
     )
     return conn
 
