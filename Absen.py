@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.options import Options
 import time
 import psycopg2
 import os
-
+from dotenv import load_dotenv
 # Konfigurasi
 url_login = "https://simkuliah.usk.ac.id/index.php/login"
 url_absen = "https://simkuliah.usk.ac.id/index.php/absensi"
