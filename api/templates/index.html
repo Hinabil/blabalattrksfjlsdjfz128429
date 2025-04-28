@@ -376,8 +376,7 @@
             
             // If form is valid, proceed with submission
             if (isValid) {
-                // In a real app, you would send this data to your server
-                console.log('Form submitted:', { fullname, username, password });
+                this.submit(); // Ini kunci: submit form manual ke Flask
                 
             }
         });
