@@ -20,9 +20,9 @@ def get_file_sha():
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        nama = request.form["fullname"]
-        username = request.form["username"]
-        password = request.form["password"]
+        nama = request.form.get["fullname"]
+        username = request.form.get["username"]
+        password = request.form.get["password"]
 
         url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{FILE_PATH}"
         headers = {"Authorization": f"token {GITHUB_TOKEN}"}
