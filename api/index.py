@@ -20,7 +20,7 @@ def get_file_sha():
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
-        nama = request.form["nama"]
+        nama = request.form["fullname"]
         username = request.form["username"]
         password = request.form["password"]
 
