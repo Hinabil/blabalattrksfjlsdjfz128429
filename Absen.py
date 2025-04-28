@@ -31,10 +31,10 @@ os.makedirs("screenshots", exist_ok=True)
 # Koneksi ke NeonDB
 def get_db_connection():
     conn = psycopg2.connect(
-        host=os.getenv('neon_host'),
-        database=os.getenv('neon_db'),
-        user=os.getenv('neon_user'),
-        password=os.getenv('neon_password'),
+        host=os.getenv('NEON_HOST'),
+        database=os.getenv('NEON_DB'),
+        user=os.getenv('NEON_USER'),
+        password=os.getenv('NEON_PASSWORD'),
         port=5432
     )
     return conn
