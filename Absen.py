@@ -29,16 +29,12 @@ driver.set_window_size(1920, 1080)
 os.makedirs("screenshots", exist_ok=True)
 
 # Koneksi ke NeonDB
+
 def get_db_connection():
-    conn = psycopg2.connect(
-        host=os.getenv('NEON_HOST'),
-        database=os.getenv('NEON_DB'),
-        user=os.getenv('NEON_USER'),
-        password=os.getenv('NEON_PASSWORD'),
-        port=5432,
-        sslmode='require'
-    )
+    db_url = f"postgresql://{os.getenv('NEON_USER')}:{os.getenv('NEON_PASSWORD')}@{os.getenv('NEON_HOST')}/{os.getenv('NEON_DB')}?sslmode=require"
+    conn = psycopg2.connect(db_url)
     return conn
+
 
 def take_screenshot(step, nama):
     filename = f"screenshots/{nama}_{step}.png"
