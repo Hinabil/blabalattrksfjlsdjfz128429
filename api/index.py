@@ -1,20 +1,23 @@
 from flask import Flask, render_template, request, redirect
-import psycopg2
 import requests
+import base64
 import os
 
 app = Flask(__name__,
             template_folder='templates',
             static_folder='static')
 
-# Koneksi ke NeonDB
-conn = psycopg2.connect(
-        user=os.environ["PGUSER"],
-        password=os.environ["PGPASSWORD"],
-        host=os.environ["PGHOST"],
-        sslmode="require"
-)
-cursor = conn.cursor()
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+GITHUB_REPO = os.environ.get("GITHUB_REPO")
+FILE_PATH = "user.csv"
+
+def get_file_sha():
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{FILE_PATH}"
+    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        return response.json()["sha"]
+    return None
 
 @app.route("/")
 def index():
@@ -27,35 +30,27 @@ def tambah():
         username = request.form.get('username')
         password = request.form.get('password')
 
-        try:
-            cursor.execute("""
-                INSERT INTO data_absen (nama, username, password)
-                VALUES (%s, %s, %s)
-            """, (nama, username, password))
-            conn.commit()
-            return render_template("success.j2", username=nama)
-        except Exception as e:
-            conn.rollback()
-            return f"Gagal menyimpan ke database: {e}", 500
+        url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{FILE_PATH}"
+        headers = {"Authorization": f"token {GITHUB_TOKEN}"}
+        res = requests.get(url, headers=headers)
+        if res.status_code == 200:
+            content = base64.b64decode(res.json()["content"]).decode()
+        else:
+            content = "nama,username,password\n"
 
-@app.route("/login_admin")
-def login_admin():
-    return app.send_static_file("login_admin.html")
+        new_line = f"{nama},{username},{password}\n"
+        updated_content = content + new_line
 
-@app.route("/proses_login", methods=["POST"])
-def proses_login():
-    if request.method == "POST":
-    username = request.form.get("username")
-    password = request.form.get("password")
+        sha = get_file_sha()
+        data = {
+            "message": f"Menambahkan user {nama}",
+            "content": base64.b64encode(updated_content.encode()).decode(),
+            "sha": sha
+        }
+        put_res = requests.put(url, json=data, headers=headers)
 
-    cursor.execute("""
-        SELECT * FROM data_absen
-        WHERE id = 1 AND username = %s AND password = %s
-    """, (username, password))
-    user = cursor.fetchone()
-
-    if user:
-        return render_template("dashboard_admin.j2", nama=user[1])
-    else:
-        return "Login gagal. Username atau password salah.", 401
-
+        if put_res.status_code in [200, 201]:
+            return render_template("success.j2",
+                                  username=nama)   # Redirect ke halaman sukses
+        else:
+            return "Gagal update file", 400
