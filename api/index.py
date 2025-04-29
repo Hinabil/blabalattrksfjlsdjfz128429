@@ -13,6 +13,12 @@ db_pool = pool.SimpleConnectionPool(
     password=os.environ.get("PGPASSWORD")
 )
 
+def tampilkanSemuaUser():
+    g.cursor.execute(SELECT * FROM "data absen")
+    hasil = g.cursor.fetchall()
+    return hasil
+    
+    
 # 🔄 Ambil koneksi dari pool setiap request
 @app.before_request
 def get_db_conn():
@@ -66,7 +72,8 @@ def proses_login():
     user = g.cursor.fetchone()
 
     if user:
-        return render_template("Dashboard_admin.j2", nama=user[1])
+        userr=tampilkanSemuaUser()
+        return render_template("Dashboard_admin.j2", user=userr)
     else:
         return "Login gagal. Username atau password salah.", 401
 
