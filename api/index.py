@@ -66,7 +66,7 @@ def proses_login():
     user = g.cursor.fetchone()
 
     if user:
-        return render_template("dashboard_admin.j2", nama=user[1])
+        return render_template("Dashboard_admin.j2", nama=user[1])
     else:
         return "Login gagal. Username atau password salah.", 401
 
