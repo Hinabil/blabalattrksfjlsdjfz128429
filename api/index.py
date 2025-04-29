@@ -9,7 +9,7 @@ app = Flask(__name__,
 
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 GITHUB_REPO = os.environ.get("GITHUB_REPO")
-FILE_PATH = "user.csv"
+
 
 def get_file_sha():
     url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{FILE_PATH}"
