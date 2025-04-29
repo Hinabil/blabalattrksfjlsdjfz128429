@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect
 import requests
-import base64
+import psycopg2
 import os
 
 app = Flask(__name__,
