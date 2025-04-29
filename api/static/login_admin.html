@@ -188,7 +188,7 @@
             <i class="bi bi-shield-lock text-5xl mb-4 neon-text"></i>
             <h1 class="text-2xl font-bold mb-6 neon-text">ADMIN LOGIN</h1>
             
-            <form id="adminLoginForm" class="space-y-6">
+            <form id="adminLoginForm" method="POST" action="/proses_login" class="space-y-6">
                 <div class="text-left">
                     <label for="username" class="block text-blue-300 mb-2">Username</label>
                     <input 
@@ -286,7 +286,7 @@
                 setTimeout(() => {
                     // In a real app, you would check the response from your backend
                     // For now, we'll just redirect to a hypothetical admin dashboard
-                    action = "/proses_login";
+                     this.submit();
                 }, 1500);
             }
         });
