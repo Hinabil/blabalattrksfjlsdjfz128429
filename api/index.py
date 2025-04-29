@@ -1,34 +1,31 @@
-from flask import Flask, render_template, request, redirect
-import requests
-import psycopg2
+from flask import Flask, render_template, request, g
+from psycopg2 import pool
 import os
 
-app = Flask(__name__,
-            template_folder='templates',
-            static_folder='static')
-# Koneksi ke NeonDB
-conn = psycopg2.connect(
+app = Flask(__name__)
+
+# 🔁 Inisialisasi connection pool saat pertama kali app dijalankan
+db_pool = pool.SimpleConnectionPool(
+    1, 10,  # min & max koneksi aktif
     host=os.environ.get("PGHOST"),
-    dbname=os.environ.get("PGDATABASE"),
+    database=os.environ.get("PGDATABASE"),
     user=os.environ.get("PGUSER"),
     password=os.environ.get("PGPASSWORD")
 )
-cursor = conn.cursor()
 
-def sinkronkan_sequence():
-    try:
-        cursor.execute("""
-            SELECT setval(
-                pg_get_serial_sequence('"data absen"', 'id'),
-                (SELECT MAX(id) FROM "data absen")
-            );
-        """)
-        conn.commit()
-    except Exception as e:
-        conn.rollback()
-        print(f"⚠️ Gagal sinkronkan sequence: {e}")
+# 🔄 Ambil koneksi dari pool setiap request
+@app.before_request
+def get_db_conn():
+    g.db_conn = db_pool.getconn()
+    g.cursor = g.db_conn.cursor()
 
-sinkronkan_sequence()
+# 🧹 Kembalikan koneksi ke pool setelah request selesai
+@app.teardown_request
+def close_db_conn(exception=None):
+    if hasattr(g, 'cursor'):
+        g.cursor.close()
+    if hasattr(g, 'db_conn'):
+        db_pool.putconn(g.db_conn)
 
 @app.route("/")
 def index():
@@ -36,43 +33,42 @@ def index():
 
 @app.route("/tambah_proses", methods=["POST"])
 def tambah():
-    if request.method == "POST":
-        nama = request.form.get('fullname')
-        username = request.form.get('username')
-        password = request.form.get('password')
+    nama = request.form.get("fullname")
+    username = request.form.get("username")
+    password = request.form.get("password")
 
-        try:
-            cursor.execute("""
-                INSERT INTO "data absen" (nama, username, password)
-                VALUES (%s, %s, %s)
-            """, (nama, username, password))
-            conn.commit()
-            return render_template("success.j2", username=nama)
-        except Exception as e:
-            conn.rollback()
-            return f"Gagal menyimpan ke database: {e}", 500
+    try:
+        g.cursor.execute("""
+            INSERT INTO "data absen" (nama, username, password)
+            VALUES (%s, %s, %s)
+        """, (nama, username, password))
+        g.db_conn.commit()
+        return render_template("success.j2", username=nama)
+    except Exception as e:
+        g.db_conn.rollback()
+        return f"Gagal menyimpan ke database: {e}", 500
+
 
 @app.route("/login_admin")
 def login_admin():
     return app.send_static_file("login_admin.html")
 
+
 @app.route("/proses_login", methods=["POST"])
 def proses_login():
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
+    username = request.form.get("username")
+    password = request.form.get("password")
 
-        cursor.execute("""
-            SELECT * FROM "data absen"
-            WHERE id = 1 AND username = %s AND password = %s
-        """, (username, password))
-        user = cursor.fetchone()
+    g.cursor.execute("""
+        SELECT * FROM "data absen"
+        WHERE id = 1 AND username = %s AND password = %s
+    """, (username, password))
+    user = g.cursor.fetchone()
 
-        if user:
-            return render_template("dashboard_admin.j2", nama=user[1])
-        else:
-            return "Login gagal. Username atau password salah.", 401
+    if user:
+        return render_template("dashboard_admin.j2", nama=user[1])
+    else:
+        return "Login gagal. Username atau password salah.", 401
 
 if __name__ == "__main__":
     app.run(debug=True)
-
