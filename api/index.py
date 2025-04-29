@@ -58,5 +58,3 @@ def proses_login():
     else:
         return "Login gagal. Username atau password salah.", 401
 
-if __name__ == "__main__":
-    app.run(debug=True)
