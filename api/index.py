@@ -15,6 +15,21 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 
+def sinkronkan_sequence():
+    try:
+        cursor.execute("""
+            SELECT setval(
+                pg_get_serial_sequence('"data absen"', 'id'),
+                (SELECT MAX(id) FROM "data absen")
+            );
+        """)
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        print(f"⚠️ Gagal sinkronkan sequence: {e}")
+
+sinkronkan_sequence()
+
 @app.route("/")
 def index():
     return app.send_static_file("index.html")
