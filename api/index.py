@@ -40,3 +40,7 @@ def tambah():
         except Exception as e:
             conn.rollback()
             return f"Gagal menyimpan ke database: {e}", 500
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
