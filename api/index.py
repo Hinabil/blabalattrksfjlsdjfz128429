@@ -28,7 +28,7 @@ def tambah():
 
         try:
             cursor.execute("""
-                INSERT INTO data_absen (nama, username, password)
+                INSERT INTO data absen (nama, username, password)
                 VALUES (%s, %s, %s)
             """, (nama, username, password))
             conn.commit()
@@ -48,8 +48,8 @@ def proses_login():
         password = request.form.get("password")
 
         cursor.execute("""
-            SELECT * FROM data_absen
-            WHERE username = %s AND password = %s
+            SELECT * FROM data absen
+            WHERE id = 1 AND username = %s AND password = %s
         """, (username, password))
         user = cursor.fetchone()
 
