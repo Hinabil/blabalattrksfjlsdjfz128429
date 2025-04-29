@@ -6,103 +6,105 @@ import time
 import psycopg2
 import os
 from dotenv import load_dotenv
-# Konfigurasi
-url_login = "https://simkuliah.usk.ac.id/index.php/login"
-url_absen = "https://simkuliah.usk.ac.id/index.php/absensi"
-url_logout = "https://simkuliah.usk.ac.id/index.php/login/logout"
 
+# 🔁 Muat variabel lingkungan
+load_dotenv()
+
+# 🔧 URL Konstanta
+URL_LOGIN = "https://simkuliah.usk.ac.id/index.php/login"
+URL_ABSEN = "https://simkuliah.usk.ac.id/index.php/absensi"
+URL_LOGOUT = "https://simkuliah.usk.ac.id/index.php/login/logout"
+
+# 🛠️ Setup ChromeDriver
 chrome_service = Service("/usr/local/bin/chromedriver")
-
-# Opsi Chrome
 chrome_options = Options()
-chrome_options.add_argument("--headless")  # Tanpa GUI
+chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 
-# Inisialisasi WebDriver
-driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
-
-# Setel ukuran layar HD
-driver.set_window_size(1920, 1080)
-
-# Direktori untuk screenshot
+# 🖼️ Direktori tangkapan layar
 os.makedirs("screenshots", exist_ok=True)
 
-# Koneksi ke NeonDB
-
-def get_db_connection():
-    conn = psycopg2.connect(
-        user=os.environ["PGUSER"],
-        password=os.environ["PGPASSWORD"],
-        host=os.environ["PGHOST"],
-        sslmode="require"
-    )
-    return conn
-
-def take_screenshot(step, nama):
+def take_screenshot(driver, step, nama):
     filename = f"screenshots/{nama}_{step}.png"
     driver.save_screenshot(filename)
-    print(f"Tangkapan layar diambil: {filename}")
+    print(f"📸 Screenshot: {filename}")
 
-def login(nama, username, password):
+def login(driver, nama, username, password):
     try:
-        driver.get(url_login)
-        take_screenshot("login_page", nama)
-
+        driver.get(URL_LOGIN)
         time.sleep(2)
-        driver.find_element(By.XPATH, "//input[@class='form-control' and @placeholder='NIP/NPM']").send_keys(username)
-        driver.find_element(By.XPATH, "//input[@class='form-control' and @placeholder='Password']").send_keys(password)
+        take_screenshot(driver, "login_page", nama)
 
+        driver.find_element(By.XPATH, "//input[@placeholder='NIP/NPM']").send_keys(username)
+        driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys(password)
         time.sleep(1)
         driver.find_element(By.XPATH, "//button[text()='Login']").click()
 
         time.sleep(2)
-        take_screenshot("login_success", nama)
-        print(f"Login berhasil untuk: {nama}")
+        take_screenshot(driver, "login_success", nama)
+        print(f"✅ Login berhasil: {nama}")
         return True
     except Exception as e:
-        take_screenshot("login_error", nama)
-        print(f"Login gagal untuk {nama}: {e}")
+        take_screenshot(driver, "login_error", nama)
+        print(f"❌ Login gagal: {nama} - {e}")
         return False
 
-def absen(nama):
+def absen(driver, nama):
     try:
-        driver.get(url_absen)
+        driver.get(URL_ABSEN)
         time.sleep(1)
-        take_screenshot("absen_page", nama)
-        time.sleep(1)
+        take_screenshot(driver, "absen_page", nama)
 
         driver.find_element(By.XPATH, "//button[text()='Konfirmasi Kehadiran']").click()
         time.sleep(1)
-        take_screenshot("absen_confirm_button", nama)
+        take_screenshot(driver, "absen_confirm_button", nama)
 
         driver.find_element(By.XPATH, "//button[text()='Konfirmasi']").click()
         time.sleep(2)
-        take_screenshot("absen_success", nama)
+        take_screenshot(driver, "absen_success", nama)
 
-        print(f"Absen berhasil untuk: {nama}")
-        driver.get(url_logout)
-        take_screenshot("logout", nama)
+        print(f"🟢 Absen sukses: {nama}")
     except Exception as e:
-        take_screenshot("absen_error", nama)
-        print(f"Gagal absen untuk {nama}: {e}")
-        driver.get(url_logout)
+        take_screenshot(driver, "absen_error", nama)
+        print(f"🔴 Gagal absen: {nama} - {e}")
+    finally:
+        driver.get(URL_LOGOUT)
+        take_screenshot(driver, "logout", nama)
 
 def get_users_from_db():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute('SELECT nama, username, password FROM "data absen"')
-    users = cur.fetchall()
-    cur.close()
-    conn.close()
-    return users
+    # 🔒 Hanya koneksi saat diperlukan
+    try:
+        with psycopg2.connect(
+            user=os.environ["PGUSER"],
+            password=os.environ["PGPASSWORD"],
+            host=os.environ["PGHOST"],
+            database=os.environ["PGDATABASE"],
+            sslmode="require"
+        ) as conn:
+            with conn.cursor() as cur:
+                cur.execute('SELECT nama, username, password FROM "data absen"')
+                return cur.fetchall()
+    except Exception as e:
+        print(f"⚠️ Gagal koneksi ke database: {e}")
+        return []
 
-# Main logic
-try:
+def main():
     users = get_users_from_db()
-    for nama, username, password in users:
-        if login(nama, username, password):
-            absen(nama)
-finally:
-    driver.quit()
-    print("Proses selesai.")
+    if not users:
+        print("⚠️ Tidak ada data user ditemukan.")
+        return
+
+    driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
+    driver.set_window_size(1920, 1080)
+
+    try:
+        for nama, username, password in users:
+            if login(driver, nama, username, password):
+                absen(driver, nama)
+    finally:
+        driver.quit()
+        print("✅ Proses selesai dan browser ditutup.")
+
+if __name__ == "__main__":
+    main()
