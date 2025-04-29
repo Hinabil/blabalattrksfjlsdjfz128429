@@ -1,1 +1,764 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #0a0a1a;
+            color: #e0e0ff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .neon-border {
+            position: relative;
+            border: 1px solid rgba(0, 150, 255, 0.3);
+            box-shadow: 0 0 10px rgba(0, 150, 255, 0.5),
+                        0 0 20px rgba(0, 150, 255, 0.3),
+                        0 0 40px rgba(0, 150, 255, 0.2);
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            background: rgba(10, 20, 40, 0.7);
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent 0%,
+                rgba(0, 180, 255, 0.1) 50%,
+                transparent 100%
+            );
+            transform: rotate(0deg);
+            animation: rotateLight 15s linear infinite;
+            z-index: -1;
+        }
+        
+        .neon-border:hover {
+            box-shadow: 0 0 15px rgba(0, 150, 255, 0.7),
+                        0 0 30px rgba(0, 150, 255, 0.5),
+                        0 0 60px rgba(0, 150, 255, 0.3);
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px rgba(0, 150, 255, 0.5),
+                         0 0 10px rgba(0, 150, 255, 0.3);
+            color: #0096ff;
+        }
+        
+        .neon-button {
+            background: linear-gradient(135deg, #0066ff, #00b4ff);
+            color: white;
+            transition: all 0.3s ease;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+        
+        .neon-button:hover {
+            background: linear-gradient(135deg, #00b4ff, #0066ff);
+            box-shadow: 0 0 15px rgba(0, 180, 255, 0.7);
+            transform: translateY(-2px);
+        }
+        
+        .danger-button {
+            background: linear-gradient(135deg, #ff0066, #ff00b4);
+        }
+        
+        .danger-button:hover {
+            background: linear-gradient(135deg, #ff00b4, #ff0066);
+            box-shadow: 0 0 15px rgba(255, 0, 180, 0.7);
+        }
+        
+        .success-button {
+            background: linear-gradient(135deg, #00ff66, #00b4ff);
+        }
+        
+        .success-button:hover {
+            background: linear-gradient(135deg, #00b4ff, #00ff66);
+            box-shadow: 0 0 15px rgba(0, 255, 180, 0.7);
+        }
+        
+        .input-field {
+            background: rgba(0, 20, 40, 0.5);
+            border: 1px solid rgba(0, 150, 255, 0.3);
+            color: #e0e0ff;
+            padding: 8px 12px;
+            border-radius: 5px;
+            width: 100%;
+            transition: all 0.3s ease;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: #0096ff;
+            box-shadow: 0 0 10px rgba(0, 150, 255, 0.5);
+        }
+        
+        .input-field::placeholder {
+            color: rgba(200, 200, 255, 0.5);
+        }
+        
+        /* Table styles */
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+        
+        .data-table th {
+            background: rgba(0, 50, 100, 0.5);
+            color: #00b4ff;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+        
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(0, 150, 255, 0.1);
+            vertical-align: middle;
+        }
+        
+        .data-table tr:hover td {
+            background: rgba(0, 100, 200, 0.1);
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 50, 100, 0.9);
+            border: 1px solid rgba(0, 180, 255, 0.5);
+            box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
+            padding: 15px 20px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(200%);
+            transition: transform 0.5s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 10, 20, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background: rgba(10, 30, 60, 0.9);
+            border: 1px solid rgba(0, 180, 255, 0.5);
+            box-shadow: 0 0 30px rgba(0, 150, 255, 0.5);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            padding: 25px;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: float var(--duration) ease-in-out var(--delay) infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(20px);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes rotateLight {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Notification -->
+    <div class="notification" id="welcomeNotification">
+        <i class="bi bi-stars text-xl text-yellow-300"></i>
+        <div>
+            <div class="font-bold">Welcome back, <span class="text-blue-300">Nabil</span>!</div>
+            <div class="text-xs text-blue-200">You have successfully logged in to the admin dashboard.</div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container mx-auto py-8">
+        <!-- Header -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+            <div class="flex items-center gap-4">
+                <i class="bi bi-shield-lock text-4xl neon-text"></i>
+                <div>
+                    <h1 class="text-2xl font-bold neon-text">ADMIN DASHBOARD</h1>
+                    <p class="text-blue-300 text-sm">User Management System</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <div class="text-right">
+                    <div class="text-blue-300 font-medium">Nabil</div>
+                    <div class="text-xs text-blue-200">Super Admin</div>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-blue-900 flex items-center justify-center">
+                    <i class="bi bi-person text-blue-300"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats Card (simplified to just total users) -->
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-4 mb-8">
+            <div class="neon-border p-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <div class="text-blue-300 text-sm">Total Users</div>
+                        <div class="text-2xl font-bold" id="totalUsersCount">0</div>
+                    </div>
+                    <div class="w-12 h-12 rounded-full bg-blue-900/30 flex items-center justify-center">
+                        <i class="bi bi-people-fill text-blue-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- User Management Section -->
+        <div class="neon-border p-6 mb-8">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <h2 class="text-xl font-bold neon-text">USER MANAGEMENT</h2>
+                
+                <div class="flex gap-3 w-full md:w-auto">
+                    <div class="flex-1">
+                        <input type="text" id="searchInput" class="input-field" placeholder="Search users...">
+                    </div>
+                    <button id="addUserBtn" class="neon-button flex items-center gap-2">
+                        <i class="bi bi-plus-lg"></i>
+                        <span class="hidden md:inline">Add User</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>Department</th>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <!-- Users will be populated here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="flex justify-between items-center mt-4 text-sm text-blue-300">
+                <div>Showing <span id="showingFrom">1</span> to <span id="showingTo">10</span> of <span id="totalUsers">0</span> users</div>
+                <div class="flex gap-2">
+                    <button id="prevPage" class="px-3 py-1 rounded border border-blue-700 hover:bg-blue-900/30 disabled:opacity-50" disabled>
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <button id="nextPage" class="px-3 py-1 rounded border border-blue-700 hover:bg-blue-900/30">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add/Edit User Modal -->
+    <div class="modal" id="userModal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold neon-text" id="modalTitle">Add New User</h3>
+                <button id="closeModal" class="text-blue-300 hover:text-blue-100">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            
+            <form id="userForm" class="space-y-4">
+                <input type="hidden" id="userId">
+                
+                <div>
+                    <label for="fullname" class="block text-blue-300 mb-1 text-sm">Full Name</label>
+                    <input type="text" id="modalFullname" class="input-field" required>
+                </div>
+                
+                <div>
+                    <label for="department" class="block text-blue-300 mb-1 text-sm">Department</label>
+                    <input type="text" id="modalDepartment" class="input-field" required>
+                </div>
+                
+                <div>
+                    <label for="username" class="block text-blue-300 mb-1 text-sm">Username</label>
+                    <input type="text" id="modalUsername" class="input-field" required>
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-blue-300 mb-1 text-sm">Password</label>
+                    <input type="password" id="modalPassword" class="input-field" required>
+                </div>
+                
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" id="cancelModal" class="px-4 py-2 rounded border border-blue-700 hover:bg-blue-900/30">
+                        Cancel
+                    </button>
+                    <button type="submit" id="saveUser" class="neon-button flex items-center gap-2">
+                        <i class="bi bi-save"></i>
+                        <span>Save</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Floating particles for effect -->
+    <div class="particles" id="particles"></div>
+    
+    <script>
+        // Sample user data (will be replaced with data from Flask)
+        let users = [];
+        
+        // DOM elements
+        const userTableBody = document.getElementById('userTableBody');
+        const userModal = document.getElementById('userModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const userIdInput = document.getElementById('userId');
+        const fullnameInput = document.getElementById('modalFullname');
+        const departmentInput = document.getElementById('modalDepartment');
+        const usernameInput = document.getElementById('modalUsername');
+        const passwordInput = document.getElementById('modalPassword');
+        const addUserBtn = document.getElementById('addUserBtn');
+        const closeModal = document.getElementById('closeModal');
+        const cancelModal = document.getElementById('cancelModal');
+        const saveUser = document.getElementById('saveUser');
+        const userForm = document.getElementById('userForm');
+        const searchInput = document.getElementById('searchInput');
+        const welcomeNotification = document.getElementById('welcomeNotification');
+        const totalUsersCount = document.getElementById('totalUsersCount');
+        
+        // Pagination variables
+        let currentPage = 1;
+        const usersPerPage = 5;
+        let filteredUsers = [...users];
+        
+        // Initialize the dashboard
+        async function initDashboard() {
+            // Fetch users from Flask backend
+            await fetchUsers();
+            
+            renderUserTable();
+            setupEventListeners();
+            
+            // Show welcome notification
+            setTimeout(() => {
+                welcomeNotification.classList.add('show');
+                
+                // Hide after 5 seconds
+                setTimeout(() => {
+                    welcomeNotification.classList.remove('show');
+                }, 5000);
+            }, 500);
+        }
+        
+        // Fetch users from Flask backend
+        async function fetchUsers() {
+            try {
+                const response = await fetch('/api/users');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch users');
+                }
+                users = await response.json();
+                filteredUsers = [...users];
+                updateTotalUsersCount();
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                showNotification('Failed to load users', 'error');
+            }
+        }
+        
+        // Update total users count
+        function updateTotalUsersCount() {
+            totalUsersCount.textContent = users.length;
+            document.getElementById('totalUsers').textContent = users.length;
+        }
+        
+        // Render user table with pagination
+        function renderUserTable() {
+            userTableBody.innerHTML = '';
+            
+            const startIndex = (currentPage - 1) * usersPerPage;
+            const endIndex = startIndex + usersPerPage;
+            const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+            
+            paginatedUsers.forEach(user => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td class="font-medium">${user.fullname}</td>
+                    <td>${user.department}</td>
+                    <td>${user.username}</td>
+                    <td>••••••••</td>
+                    <td>
+                        <div class="flex gap-2">
+                            <button class="edit-user neon-button !py-1 !px-2 !text-xs" data-id="${user.id}">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
+                            <button class="delete-user danger-button !py-1 !px-2 !text-xs" data-id="${user.id}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                
+                userTableBody.appendChild(row);
+            });
+            
+            // Update pagination info
+            document.getElementById('showingFrom').textContent = startIndex + 1;
+            document.getElementById('showingTo').textContent = Math.min(endIndex, filteredUsers.length);
+            document.getElementById('totalUsers').textContent = filteredUsers.length;
+            
+            // Update pagination buttons
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = endIndex >= filteredUsers.length;
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Pagination
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderUserTable();
+                }
+            });
+            
+            document.getElementById('nextPage').addEventListener('click', () => {
+                const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderUserTable();
+                }
+            });
+            
+            // Add user button
+            addUserBtn.addEventListener('click', () => {
+                modalTitle.textContent = 'Add New User';
+                userForm.reset();
+                userIdInput.value = '';
+                userModal.classList.add('active');
+            });
+            
+            // Close modal buttons
+            closeModal.addEventListener('click', () => userModal.classList.remove('active'));
+            cancelModal.addEventListener('click', () => userModal.classList.remove('active'));
+            
+            // Save user form
+            userForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const userData = {
+                    fullname: fullnameInput.value,
+                    department: departmentInput.value,
+                    username: usernameInput.value,
+                    password: passwordInput.value
+                };
+                
+                try {
+                    let response;
+                    if (userIdInput.value) {
+                        // Edit existing user
+                        const userId = parseInt(userIdInput.value);
+                        response = await fetch(`/api/users/${userId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(userData)
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error('Failed to update user');
+                        }
+                        
+                        showNotification('User updated successfully!', 'success');
+                    } else {
+                        // Add new user
+                        response = await fetch('/api/users', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(userData)
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error('Failed to add user');
+                        }
+                        
+                        showNotification('User added successfully!', 'success');
+                    }
+                    
+                    // Refresh user data
+                    await fetchUsers();
+                    userModal.classList.remove('active');
+                    renderUserTable();
+                } catch (error) {
+                    console.error('Error saving user:', error);
+                    showNotification('Failed to save user', 'error');
+                }
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                if (searchTerm) {
+                    filteredUsers = users.filter(user => 
+                        user.fullname.toLowerCase().includes(searchTerm) || 
+                        user.department.toLowerCase().includes(searchTerm) ||
+                        user.username.toLowerCase().includes(searchTerm)
+                    );
+                } else {
+                    filteredUsers = [...users];
+                }
+                
+                currentPage = 1;
+                renderUserTable();
+            });
+            
+            // Edit/Delete buttons (delegated events)
+            userTableBody.addEventListener('click', (e) => {
+                if (e.target.closest('.edit-user')) {
+                    const userId = parseInt(e.target.closest('.edit-user').dataset.id);
+                    editUser(userId);
+                }
+                
+                if (e.target.closest('.delete-user')) {
+                    const userId = parseInt(e.target.closest('.delete-user').dataset.id);
+                    deleteUser(userId);
+                }
+            });
+        }
+        
+        // Edit user
+        function editUser(userId) {
+            const user = users.find(u => u.id === userId);
+            
+            if (user) {
+                modalTitle.textContent = 'Edit User';
+                userIdInput.value = user.id;
+                fullnameInput.value = user.fullname;
+                departmentInput.value = user.department;
+                usernameInput.value = user.username;
+                passwordInput.value = '';
+                
+                userModal.classList.add('active');
+            }
+        }
+        
+        // Delete user
+        async function deleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                try {
+                    const response = await fetch(`/api/users/${userId}`, {
+                        method: 'DELETE'
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Failed to delete user');
+                    }
+                    
+                    showNotification('User deleted successfully!', 'success');
+                    
+                    // Refresh user data
+                    await fetchUsers();
+                    
+                    // Reset pagination if needed
+                    if (filteredUsers.length <= (currentPage - 1) * usersPerPage) {
+                        currentPage = Math.max(1, currentPage - 1);
+                    }
+                    
+                    renderUserTable();
+                } catch (error) {
+                    console.error('Error deleting user:', error);
+                    showNotification('Failed to delete user', 'error');
+                }
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            let iconClass = '';
+            switch(type) {
+                case 'success':
+                    iconClass = 'bi-check-circle-fill text-green-400';
+                    break;
+                case 'error':
+                    iconClass = 'bi-exclamation-triangle-fill text-red-400';
+                    break;
+                default:
+                    iconClass = 'bi-info-circle-fill text-blue-400';
+            }
+            
+            notification.innerHTML = `
+                <i class="bi ${iconClass} text-xl"></i>
+                <div>${message}</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 500);
+                }, 3000);
+            }, 10);
+        }
+        
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            if (!container) return;
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random position
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                
+                // Random size
+                const size = Math.random() * 4 + 1;
+                
+                // Random animation duration and delay
+                const duration = Math.random() * 15 + 5;
+                const delay = Math.random() * 5;
+                
+                // Apply styles
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.background = `rgba(0, 180, 255, ${Math.random() * 0.5 + 0.1})`;
+                particle.style.setProperty('--duration', `${duration}s`);
+                particle.style.setProperty('--delay', `${delay}s`);
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initDashboard();
+            createParticles();
+        });
+    </script>
+</body>
+</html>
