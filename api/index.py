@@ -37,6 +37,27 @@ def tambah():
             conn.rollback()
             return f"Gagal menyimpan ke database: {e}", 500
 
+@app.route("/login_admin")
+def login_admin():
+    return app.send_static_file("login_admin.html")
+
+@app.route("/proses_login", methods=["POST"])
+def proses_login():
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        cursor.execute("""
+            SELECT * FROM data_absen
+            WHERE username = %s AND password = %s
+        """, (username, password))
+        user = cursor.fetchone()
+
+        if user:
+            return render_template("dashboard_admin.j2", nama=user[1])
+        else:
+            return "Login gagal. Username atau password salah.", 401
+
 if __name__ == "__main__":
     app.run(debug=True)
 
