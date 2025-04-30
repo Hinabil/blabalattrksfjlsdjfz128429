@@ -73,7 +73,7 @@ def proses_login():
 
     if user:
         userr=tampilkanSemuaUser()
-        return render_template("Dashboard_admin.j2", user=userr)
+        return render_template("Dashboard_admin.j2", user=userr[1])
     else:
         return "Login gagal. Username atau password salah.", 401
 
