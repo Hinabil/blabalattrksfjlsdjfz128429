@@ -70,7 +70,7 @@ def proses_login():
     user = g.cursor.fetchone()
 
     if user:
-        session['admin'] = user[1]  # Simpan nama admin di session
+        session['admin'] = True
         return redirect(url_for("dashboard"))
     else:
         return "Login gagal. Username atau password salah.", 401
