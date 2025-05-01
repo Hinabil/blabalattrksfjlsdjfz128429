@@ -60,20 +60,29 @@ def login_admin():
 
 @app.route("/proses_login", methods=["POST"])
 def proses_login():
-    username = request.form.get("username")
-    password = request.form.get("password")
+    try:
+        username = request.form.get("username")
+        password = request.form.get("password")
 
-    g.cursor.execute("""
-        SELECT * FROM "data absen"
-        WHERE id = 1 AND username = %s AND password = %s
-    """, (username, password))
-    user = g.cursor.fetchone()
+        g.cursor.execute("""
+            SELECT * FROM "data absen"
+            WHERE id = 1 AND username = %s AND password = %s
+        """, (username, password))
+        user = g.cursor.fetchone()
 
-    if user:
-        session['admin'] = user[1]
-        return redirect(url_for("dashboard"))
-    else:
-        return "Login gagal. Username atau password salah.", 401
+        if user:
+            session['admin'] = user[1]  # Simpan nama admin ke session
+
+            # Ambil semua user
+            g.cursor.execute('SELECT id, nama, username, password FROM "data absen"')
+            semua_user = g.cursor.fetchall()
+
+            return render_template("dashboard.j2", nama=user[1], data=semua_user)
+        else:
+            return "Login gagal. Username atau password salah.", 401
+    except Exception as e:
+        return f"Terjadi error: {e}", 500
+
 
 @app.route("/dashboard")
 def dashboard():
