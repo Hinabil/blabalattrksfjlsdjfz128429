@@ -2,7 +2,11 @@ from flask import Flask, render_template, request, g
 from psycopg2 import pool
 import os
 
-app = Flask(__name__)
+app = Flask(__name__,
+            template_folder='templates',
+            static_folder='static')
+
+app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_key")
 
 # 🔁 Inisialisasi connection pool saat pertama kali app dijalankan
 db_pool = pool.SimpleConnectionPool(
@@ -66,9 +70,19 @@ def proses_login():
     user = g.cursor.fetchone()
 
     if user:
-        return render_template("Dashboard_admin.j2", nama=user[1])
+        session['admin'] = user[1]  # Simpan nama admin di session
+        return redirect(url_for("dashboard"))
     else:
         return "Login gagal. Username atau password salah.", 401
+
+@app.route("/dashboard")
+def dashboard():
+    if "admin" not in session:
+        return redirect(url_for("login_admin"))
+
+    g.cursor.execute('SELECT id, nama, username, password FROM "data absen"')
+    semua_user = g.cursor.fetchall()
+    return render_template("dashboard_admin.j2", nama=session['admin'], data=semua_user)
 
 if __name__ == "__main__":
     app.run(debug=True)
