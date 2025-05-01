@@ -71,7 +71,7 @@ def proses_login():
 
     if user:
         session['admin'] = user[1]
-        return redirect(url_for("/dashboard"))
+        return redirect(url_for("dashboard"))
     else:
         return "Login gagal. Username atau password salah.", 401
 
