@@ -71,15 +71,10 @@ def proses_login():
         user = g.cursor.fetchone()
 
         if user:
-            session['admin'] = user[1]  # Simpan nama admin ke session
-
-            # Ambil semua user
-            g.cursor.execute('SELECT id, nama, username, password FROM "data absen"')
-            semua_user = g.cursor.fetchall()
-
-            return render_template("Dashboard_admin.j2", nama=user[1], data=semua_user)
+                  session['admin'] = user[1]
+                  return redirect(url_for("dashboard"))
         else:
-            return "Login gagal. Username atau password salah.", 401
+                  return "Login gagal. Username atau password salah.", 401
     except Exception as e:
         return f"Terjadi error: {e}", 500
 
