@@ -87,7 +87,7 @@ def dashboard():
 
      g.cursor.execute('SELECT id, nama, username, password FROM "data absen"')
      semua_user = g.cursor.fetchall()
-     return render_template("dashboard_admin.j2", nama=session['admin'], data=semua_user)
+     return render_template("Dashboard_admin.j2", nama=session['admin'], data=semua_user)
    except Exception as e:
       return f"Terjadi error: {e}", 500
                
