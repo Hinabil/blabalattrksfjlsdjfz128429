@@ -81,12 +81,16 @@ def proses_login():
 
 @app.route("/dashboard")
 def dashboard():
-    if "admin" not in session:
-        return redirect(url_for("login_admin"))
+   try:
+     if "admin" not in session:
+         return redirect(url_for("login_admin"))
 
-    g.cursor.execute('SELECT id, nama, username, password FROM "data absen"')
-    semua_user = g.cursor.fetchall()
-    return render_template("dashboard_admin.j2", nama=session['admin'], data=semua_user)
+     g.cursor.execute('SELECT id, nama, username, password FROM "data absen"')
+     semua_user = g.cursor.fetchall()
+     return render_template("dashboard_admin.j2", nama=session['admin'], data=semua_user)
+   except Exception as e:
+      return f"Terjadi error: {e}", 500
+               
 
 if __name__ == "__main__":
     app.run(debug=True)
