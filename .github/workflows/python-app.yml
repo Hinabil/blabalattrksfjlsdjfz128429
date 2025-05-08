@@ -23,14 +23,14 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y google-chrome-stable  
 
-    - name: Install ChromeDriver
+    - name: Install Chrome for Testing (manual)
       run: |
-        wget -N "https://storage.googleapis.com/chrome-for-testing-public/136.0.7103.92/linux64/chromedriver-linux64.zip" -P /tmp/
-        sudo apt-get install -y unzip
-        unzip /tmp/chromedriver-linux64.zip -d /tmp/
-        sudo mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/
-        sudo chmod +x /usr/local/bin/chromedriver
-        rm -rf /tmp/chromedriver-linux64.zip /tmp/chromedriver-linux64
+        wget https://storage.googleapis.com/chrome-for-testing-public/136.0.7103.92/linux64/chrome-linux64.zip
+        unzip chrome-linux64.zip
+        sudo mv chrome-linux64 /opt/chrome
+        sudo ln -s /opt/chrome/chrome /usr/bin/google-chrome
+        google-chrome --version
+
 
     - name: Verify Installations
       run: |
