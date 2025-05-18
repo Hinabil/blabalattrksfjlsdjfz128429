@@ -81,15 +81,29 @@ def proses_login():
 
 @app.route("/dashboard")
 def dashboard():
-   try:
-     if "admin" not in session:
-         return redirect(url_for("login_admin"))
+    try:
+        if "admin" not in session:
+            return redirect(url_for("login_admin"))
 
-     g.cursor.execute('SELECT id, nama, username, password FROM "data absen"')
-     semua_user = g.cursor.fetchall()
-     return render_template("Dashboard_admin.j2", nama=session['admin'], data=semua_user)
-   except Exception as e:
-      return f"Terjadi error: {e}", 500
+        # Ambil semua user dengan kolom yang sesuai template
+        g.cursor.execute('SELECT id, nama, jurusan, username, password FROM "data absen"')
+        rows = g.cursor.fetchall()
+
+        # Mapping hasil ke dalam format dictionary sesuai dengan template
+        users = []
+        for row in rows:
+            users.append({
+                'id': row[0],
+                'full_name': row[1],       # nama → full_name
+                'department': row[2],      # bagian → department
+                'username': row[3],
+                'password': row[4],
+            })
+
+        return render_template("Dashboard_admin.j2", nama=session['admin'], users=users)
+    except Exception as e:
+        return f"Terjadi error: {e}", 500
+
                
 
 if __name__ == "__main__":
