@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menambah User Absen</title>
-    <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA/wBzAP+EAAD/EQAA/wA8AP8AqgD/UQAA/wDqALcA/wAAAP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIiIiIiIiIiIgAAAAAAAAAiAiIiIiIiICICAAAAAAAgIgIACZh1ECAiAgAAAABAICICAAAAADAgIgIAAAAAYCAiAgAAAAAgICICAAAAACAgIgIAAAAAICAiAiIiIiIgICIAAAAAAAAgIiIiIiIiIiAgAAAAAAAAACIiIiIiIiIiIAAAAAf/4AAEACAABf+gAAXAoAAF/qAABf6gAAX+oAAF/qAABf6gAAX+oAAEAKAAB/+gAAAAIAAP/+AAAAAAAA" rel="icon" type="image/x-icon">
+    <link href="data:image/x-icon;base64,AAABAAEAEBAQAAEABAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA/wBzAP+EAAD/EQAA/wA8AP8AqgD/UQAA/wDqALcA/wAAAP8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIiIiIiIiIiIgAAAAAAAAAiAiIiIiIiICICAAAAAAAgIgIACZh1ECAiAgAAAABAICICAAAAADAgIgIAAAAAYCAiAgAAAAAgICICAAAAACAgIgIAAAAAICAiAgAAAAAgICICAAAAACAgIgIAAAAAICAiAiIiIiIgICIAAAAAAAAgIiIiIiIiIiAgAAAAAAAAACIiIiIiIiIiIAAAAAf/4AAEACAABf+gAAXAoAAF/qAABf6gAAX+oAAF/qAABf6gAAX+oAAF/qAABf6gAAQAoAAH/6AAAAIAAP/+AAAAAAAA" rel="icon" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
         
@@ -233,6 +234,114 @@
             display: none;
         }
         
+        /* Select2 customization */
+        .select2-container--default .select2-selection--single {
+            background-color: rgba(10, 20, 40, 0.7) !important;
+            border: 1px solid rgba(0, 150, 255, 0.3) !important;
+            border-radius: 5px !important;
+            height: 45px !important;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #e0e0ff !important;
+            line-height: 45px !important;
+            padding-left: 15px !important;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 45px !important;
+            right: 10px !important;
+        }
+        
+        .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-color: #00b4ff transparent transparent transparent !important;
+        }
+        
+        .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+            border-color: transparent transparent #00b4ff transparent !important;
+        }
+        
+        .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background-color: #0066ff !important;
+        }
+        
+        .select2-dropdown {
+            background-color: rgba(10, 20, 40, 0.9) !important;
+            border: 1px solid rgba(0, 150, 255, 0.3) !important;
+        }
+        
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            background-color: rgba(15, 30, 60, 0.7) !important;
+            border: 1px solid rgba(0, 150, 255, 0.3) !important;
+            color: #e0e0ff !important;
+        }
+        
+        .select2-container--default .select2-results__option[aria-selected=true] {
+            background-color: rgba(0, 150, 255, 0.3) !important;
+        }
+        
+        /* Support button styles */
+        .support-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: linear-gradient(135deg, #ff6b00, #ff9500);
+            color: white;
+            border-radius: 5px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(255, 107, 0, 0.7);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .support-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(255, 107, 0, 0.9);
+        }
+        
+        /* Footer styles */
+        .footer {
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 40px;
+            color: rgba(224, 224, 255, 0.7);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(0, 150, 255, 0.2);
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        .footer-link {
+            color: rgba(0, 180, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .footer-link:hover {
+            color: #00b4ff;
+            text-shadow: 0 0 5px rgba(0, 180, 255, 0.5);
+        }
+        
+        .watermark {
+            margin-top: 15px;
+            font-size: 0.75rem;
+            color: rgba(224, 224, 255, 0.5);
+        }
+        
         @media (max-width: 640px) {
             .form-container {
                 padding: 20px;
@@ -240,6 +349,13 @@
             
             body {
                 padding: 10px;
+            }
+            
+            .support-btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+                bottom: 15px;
+                right: 15px;
             }
         }
     </style>
@@ -269,6 +385,28 @@
                     <i class="bi bi-person absolute right-3 top-3 text-blue-400"></i>
                 </div>
                 <p id="fullname-error" class="error-message">Full name is required</p>
+            </div>
+            
+            <!-- Jurusan Field -->
+            <div>
+                <label for="jurusan" class="block text-sm font-medium text-blue-300 mb-2">JURUSAN</label>
+                <div class="relative">
+                    <select id="jurusan" name="jurusan" class="neon-input" required>
+                        <option value="">Pilih Jurusan</option>
+                        <option value="Teknik Informatika">Teknik Informatika</option>
+                        <option value="Sistem Informasi">Sistem Informasi</option>
+                        <option value="Teknik Komputer">Teknik Komputer</option>
+                        <option value="Teknik Elektro">Teknik Elektro</option>
+                        <option value="Teknik Mesin">Teknik Mesin</option>
+                        <option value="Teknik Sipil">Teknik Sipil</option>
+                        <option value="Arsitektur">Arsitektur</option>
+                        <option value="Desain Komunikasi Visual">Desain Komunikasi Visual</option>
+                        <option value="Manajemen">Manajemen</option>
+                        <option value="Akuntansi">Akuntansi</option>
+                    </select>
+                    <i class="bi bi-book absolute right-3 top-3 text-blue-400"></i>
+                </div>
+                <p id="jurusan-error" class="error-message">Jurusan is required</p>
             </div>
             
             <!-- Username Field -->
@@ -315,6 +453,32 @@
         </form>
     </div>
 
+    <!-- Support Button -->
+    <a href="/support" class="support-btn">
+        <i class="bi bi-heart-fill mr-2"></i>
+        <span>Support Us</span>
+    </a>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container mx-auto px-4">
+            <p>&copy; 2023 Absensi System. All rights reserved.</p>
+            
+            <div class="footer-links">
+                <a href="https://wa.me/6282214803945" class="footer-link" target="_blank">
+                    <i class="bi bi-whatsapp"></i> Contact Admin
+                </a>
+                <a href="https://instagram.com/bilbub__" class="footer-link" target="_blank">
+                    <i class="bi bi-instagram"></i> Instagram
+                </a>
+            </div>
+            
+            <div class="watermark">
+                Created with ❤️ by <span class="text-blue-400">Nabil Mahbub</span>
+            </div>
+        </div>
+    </footer>
+
     <!-- Floating particles for effect -->
     <div class="particles">
         <div class="particle"></div>
@@ -334,7 +498,19 @@
         <div class="particle"></div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
+        // Initialize Select2 for jurusan dropdown
+        $(document).ready(function() {
+            $('#jurusan').select2({
+                placeholder: "Pilih Jurusan",
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#jurusan').parent()
+            });
+        });
+
         // Form submission handler
         document.getElementById('signupForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -346,6 +522,7 @@
             const fullname = document.getElementById('fullname').value.trim();
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
+            const jurusan = document.getElementById('jurusan').value;
             const terms = document.getElementById('terms').checked;
             
             // Validation flags
@@ -369,6 +546,12 @@
                 isValid = false;
             }
             
+            // Validate jurusan
+            if (!jurusan) {
+                showError('jurusan', 'Jurusan is required');
+                isValid = false;
+            }
+            
             // Validate terms
             if (!terms) {
                 showCheckboxError('terms', 'You must agree to the terms');
@@ -377,8 +560,7 @@
             
             // If form is valid, proceed with submission
             if (isValid) {
-                this.submit(); // Ini kunci: submit form manual ke Flask
-                
+                this.submit();
             }
         });
         
@@ -408,6 +590,9 @@
             document.querySelectorAll('.neon-input').forEach(input => {
                 input.classList.remove('input-error');
             });
+            
+            // Reset select2 error
+            document.getElementById('jurusan').classList.remove('input-error');
             
             // Reset checkbox error
             document.getElementById('terms-container').classList.remove('checkbox-error');
