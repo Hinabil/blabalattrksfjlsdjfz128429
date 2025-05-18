@@ -79,7 +79,7 @@ def proses_login():
         return f"Terjadi error: {e}", 500
                 
 @app.route("/proses_logout", methods=["POST"])
-def logout():
+def proses_logout():
     session.clear()  
     return redirect(url_for("login_admin")) 
 
