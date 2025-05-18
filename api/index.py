@@ -77,6 +77,12 @@ def proses_login():
                   return "Login gagal. Username atau password salah.", 401
     except Exception as e:
         return f"Terjadi error: {e}", 500
+                
+@app.route("/proses_logout", methods=["POST"])
+def logout():
+    session.clear()  
+    return redirect(url_for("login_admin")) 
+
 
 
 @app.route("/dashboard")
