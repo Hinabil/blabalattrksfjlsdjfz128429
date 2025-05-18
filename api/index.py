@@ -100,7 +100,12 @@ def dashboard():
                 'password': row[4],
             })
 
-        return render_template("Dashboard_admin.j2", nama=session['admin'], users=users)
+        current_user = {
+            'username': session['admin'],
+            'role': 'Super Admin'  # Atau ambil dari DB kalau ingin dinamis
+        }
+
+        return render_template("Dashboard_admin.j2", nama=session['admin'], users=users, current_user=current_user)
     except Exception as e:
         return f"Terjadi error: {e}", 500
 
