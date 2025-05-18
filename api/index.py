@@ -80,10 +80,11 @@ def proses_login():
                 
 @app.route("/proses_logout", methods=["POST"])
 def proses_logout():
-    session.clear()  
-    return redirect(url_for("login_admin")) 
-
-
+    try:
+         session.clear()  
+         return redirect(url_for("login_admin")) 
+    except Exception as e:
+        return f"Terjadi error: {e}", 500
 
 @app.route("/dashboard")
 def dashboard():
