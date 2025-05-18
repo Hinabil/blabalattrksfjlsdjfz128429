@@ -40,6 +40,7 @@ def tambah():
     nama = request.form.get("fullname")
     username = request.form.get("username")
     password = request.form.get("password")
+    jurusan = request.form.get("jurusan")
 
     try:
         g.cursor.execute("""
