@@ -43,9 +43,9 @@ def tambah():
 
     try:
         g.cursor.execute("""
-            INSERT INTO "data absen" (nama, username, password)
-            VALUES (%s, %s, %s)
-        """, (nama, username, password))
+            INSERT INTO "data absen" (nama, username, password, jurusan)
+            VALUES (%s, %s, %s, %s)
+        """, (nama, username, password, jurusan))
         g.db_conn.commit()
         return render_template("success.j2", username=nama)
     except Exception as e:
