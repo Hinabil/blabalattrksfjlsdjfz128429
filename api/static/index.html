@@ -389,24 +389,15 @@
             
             <!-- Jurusan Field -->
             <div>
-                <label for="jurusan" class="block text-sm font-medium text-blue-300 mb-2">JURUSAN</label>
-                <div class="relative">
+              <label for="jurusan" class="block text-sm font-medium text-blue-300 mb-2">JURUSAN</label>
+                  <div class="relative">
                     <select id="jurusan" name="jurusan" class="neon-input" required>
-                        <option value="">Pilih Jurusan</option>
-                        <option value="Teknik Informatika">Teknik Informatika</option>
-                        <option value="Sistem Informasi">Sistem Informasi</option>
-                        <option value="Teknik Komputer">Teknik Komputer</option>
-                        <option value="Teknik Elektro">Teknik Elektro</option>
-                        <option value="Teknik Mesin">Teknik Mesin</option>
-                        <option value="Teknik Sipil">Teknik Sipil</option>
-                        <option value="Arsitektur">Arsitektur</option>
-                        <option value="Desain Komunikasi Visual">Desain Komunikasi Visual</option>
-                        <option value="Manajemen">Manajemen</option>
-                        <option value="Akuntansi">Akuntansi</option>
+                      <option value="">Pilih Jurusan</option>
+      <!-- Option lainnya akan dimasukkan lewat JS -->
                     </select>
                     <i class="bi bi-book absolute right-3 top-3 text-blue-400"></i>
-                </div>
-                <p id="jurusan-error" class="error-message">Jurusan is required</p>
+                  </div>
+                  <p id="jurusan-error" class="error-message">Jurusan is required</p>
             </div>
             
             <!-- Username Field -->
@@ -720,6 +711,28 @@
         
         // Initialize particles when DOM is loaded
         document.addEventListener('DOMContentLoaded', createParticles);
+
+    const jurusanList = [
+        "Teknik Informatika",
+        "Sistem Informasi",
+        "Teknik Komputer",
+        "Teknik Elektro",
+        "Teknik Mesin",
+        "Teknik Sipil",
+        "Arsitektur",
+        "Desain Komunikasi Visual",
+        "Manajemen",
+        "Akuntansi"
+      ];
+
+    const selectElement = document.getElementById("jurusan");
+
+    jurusanList.forEach(jurusan => {
+        const option = document.createElement("option");
+        option.value = jurusan;
+        option.textContent = jurusan;
+        selectElement.appendChild(option);
+      });
     </script>
 </body>
 </html>
