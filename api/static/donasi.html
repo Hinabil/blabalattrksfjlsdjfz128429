@@ -89,6 +89,12 @@
             align-items: center;
             justify-content: center;
             background: transparent;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .qris-code:hover {
+            transform: scale(1.03);
         }
         
         .qris-code img {
@@ -117,6 +123,64 @@
         .back-button:hover {
             background: rgba(0, 150, 255, 0.2);
             box-shadow: 0 0 10px rgba(0, 180, 255, 0.3);
+        }
+        
+        .zoom-button {
+            background: rgba(10, 20, 40, 0.7);
+            border: 1px solid rgba(0, 150, 255, 0.3);
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .zoom-button:hover {
+            background: rgba(0, 150, 255, 0.2);
+            box-shadow: 0 0 10px rgba(0, 180, 255, 0.3);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        .modal-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: var(--primary);
+            transform: scale(1.2);
         }
         
         @keyframes rotateLight {
@@ -194,6 +258,17 @@
                 flex-direction: column;
                 gap: 10px;
             }
+            
+            .modal-content {
+                max-width: 95%;
+                max-height: 95%;
+            }
+            
+            .close-modal {
+                top: 15px;
+                right: 15px;
+                font-size: 25px;
+            }
         }
         
         @media (max-width: 400px) {
@@ -206,7 +281,7 @@
 </head>
 <body>
     <!-- Back Button -->
-    <a href="absen.html" class="back-button neon-border">
+    <a href="/" class="back-button neon-border">
         <i class="bi bi-arrow-left"></i>
         <span>Kembali ke Absen</span>
     </a>
@@ -218,14 +293,27 @@
             <p class="text-blue-300">Scan kode QR di bawah untuk berdonasi</p>
         </div>
         
-        <div class="qris-code">
+        <div class="qris-code" id="qrisCode">
             <!-- Ganti dengan gambar QRIS Anda -->
             <img src="/static/img/qris-gopay.png" alt="QRIS Code">
         </div>
         
+        <button class="zoom-button" id="zoomButton">
+            <i class="bi bi-zoom-in"></i>
+            <span>Tampilkan Lebih Besar</span>
+        </button>
+        
         <div class="text-center mt-4">
             <p class="text-sm text-blue-300">Gunakan aplikasi mobile banking atau e-wallet untuk scan</p>
             <p class="text-xs text-blue-400 mt-2">Terima kasih atas donasinya!</p>
+        </div>
+    </div>
+
+    <!-- Modal for enlarged QRIS -->
+    <div class="modal" id="qrisModal">
+        <span class="close-modal" id="closeModal">&times;</span>
+        <div class="modal-content">
+            <img src="https://via.placeholder.com/600?text=QRIS+CODE" alt="QRIS Code">
         </div>
     </div>
 
@@ -250,7 +338,6 @@
     </footer>
 
     <script>
-        // Add small animation for better mobile experience
         document.addEventListener('DOMContentLoaded', function() {
             // Add click effect to back button
             const backButton = document.querySelector('.back-button');
@@ -262,6 +349,33 @@
                     }, 200);
                 });
             }
+            
+            // Modal functionality
+            const qrisCode = document.getElementById('qrisCode');
+            const zoomButton = document.getElementById('zoomButton');
+            const qrisModal = document.getElementById('qrisModal');
+            const closeModal = document.getElementById('closeModal');
+            
+            function openModal() {
+                qrisModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeModalFunc() {
+                qrisModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            
+            qrisCode.addEventListener('click', openModal);
+            zoomButton.addEventListener('click', openModal);
+            closeModal.addEventListener('click', closeModalFunc);
+            
+            // Close modal when clicking outside the image
+            qrisModal.addEventListener('click', function(e) {
+                if (e.target === qrisModal) {
+                    closeModalFunc();
+                }
+            });
             
             // Adjust layout for very small screens
             function adjustLayout() {
