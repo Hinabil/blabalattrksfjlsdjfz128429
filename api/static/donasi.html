@@ -313,7 +313,7 @@
     <div class="modal" id="qrisModal">
         <span class="close-modal" id="closeModal">&times;</span>
         <div class="modal-content">
-            <img src="https://via.placeholder.com/600?text=QRIS+CODE" alt="QRIS Code">
+            <img src="/static/img/qris-gopay.png" alt="QRIS Code">
         </div>
     </div>
 
@@ -336,6 +336,25 @@
             </div>
         </div>
     </footer>
+    
+        <!-- Floating particles for effect -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -396,6 +415,76 @@
             window.addEventListener('resize', adjustLayout);
             adjustLayout();
         });
+
+                // Create floating particles
+        function createParticles() {
+            const container = document.querySelector('.particles');
+            if (!container) return;
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random position
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                
+                // Random size
+                const size = Math.random() * 4 + 1;
+                
+                // Random animation duration
+                const duration = Math.random() * 15 + 5;
+                const delay = Math.random() * 5;
+                
+                // Apply styles
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.background = `rgba(0, 180, 255, ${Math.random() * 0.5 + 0.1})`;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // Add floating animation to CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            .particles {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: -1;
+            }
+            
+            .particle {
+                position: absolute;
+                border-radius: 50%;
+                opacity: 0.8;
+            }
+            
+            @keyframes float {
+                0% {
+                    transform: translateY(0) translateX(0);
+                    opacity: 0.8;
+                }
+                50% {
+                    opacity: 0.3;
+                }
+                100% {
+                    transform: translateY(-100vh) translateX(20px);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialize particles when DOM is loaded
+        document.addEventListener('DOMContentLoaded', createParticles);
     </script>
 </body>
 </html>
