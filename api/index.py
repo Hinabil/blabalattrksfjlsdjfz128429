@@ -35,6 +35,10 @@ def close_db_conn(exception=None):
 def index():
     return app.send_static_file("index.html")
 
+@app.route("/donasi")
+def donasi():
+    return app.send_static_file("donasi.html")
+
 @app.route("/tambah_proses", methods=["POST"])
 def tambah():
     nama = request.form.get("fullname")
