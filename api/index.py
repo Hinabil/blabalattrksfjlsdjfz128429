@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, g, redirect, url_for, session
 from psycopg2 import pool
+from flask import send_from_directory
 import os
 
 app = Flask(__name__,
@@ -30,6 +31,15 @@ def close_db_conn(exception=None):
         g.cursor.close()
     if hasattr(g, 'db_conn'):
         db_pool.putconn(g.db_conn)
+
+
+@app.route('/robots.txt')
+def robots_txt():
+    return send_from_directory('static', 'robots.txt', mimetype='text/plain')
+
+@app.route('/sitemap.xml')
+def sitemap_xml():
+    return send_from_directory('static', 'sitemap.xml', mimetype='application/xml')
 
 @app.route("/")
 def index():
