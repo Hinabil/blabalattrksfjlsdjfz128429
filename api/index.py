@@ -24,6 +24,10 @@ def get_db_conn():
     g.db_conn = db_pool.getconn()
     g.cursor = g.db_conn.cursor()
 
+def check_for_maintenance():
+    if True:
+        return render_template('maintenance.html'), 503
+
 # 🧹 Kembalikan koneksi ke pool setelah request selesai
 @app.teardown_request
 def close_db_conn(exception=None):
