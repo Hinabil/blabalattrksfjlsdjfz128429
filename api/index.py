@@ -36,6 +36,9 @@ def close_db_conn(exception=None):
     if hasattr(g, 'db_conn'):
         db_pool.putconn(g.db_conn)
 
+@app.route('/ads.txt')
+def ads():
+    return send_from_directory('static', 'ads.txt')
 
 @app.route('/robots.txt')
 def robots_txt():
