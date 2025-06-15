@@ -203,18 +203,21 @@
             border-width: 0 2px 2px 0;
             transform: rotate(45deg);
         }
-        
-        .admin-btn {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
+        .checkbox-container:hover .checkmark {
+            border-color: #00b4ff;
+            box-shadow: 0 0 5px rgba(0, 180, 255, 0.5);
+        }
+        .checkbox-container:hover .checkmark:after {
+            border-color: #fff;
+        }
+        .text-center {
+            text-align: center;
         }
         
         .form-container {
             width: 100%;
             max-width: 500px;
-            margin: 0 auto;
+            margin: 50px auto 10px auto;
             padding: 30px;
         }
         
@@ -360,6 +363,156 @@
             font-size: 0.75rem;
             color: rgba(224, 224, 255, 0.5);
         }
+
+        /* Navbar Styles */
+        .neon-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 0;
+            background: rgba(10, 20, 40, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 150, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 150, 255, 0.3);
+        }
+
+        .navbar-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .navbar-link {
+            color: rgba(224, 224, 255, 0.8);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .navbar-link:hover {
+            color: #00b4ff;
+            text-shadow: 0 0 5px rgba(0, 180, 255, 0.5);
+        }
+
+        .navbar-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00b4ff;
+            transition: width 0.3s ease;
+        }
+
+        .navbar-link:hover::after {
+            width: 100%;
+        }
+
+        /* Mobile Menu Button */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #00b4ff;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .navbar-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 70px);
+                background: rgba(10, 20, 40, 0.98);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 20px;
+                gap: 20px;
+                transition: left 0.3s ease;
+                z-index: 999;
+            }
+
+            .navbar-links.active {
+                left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .navbar-link {
+                font-size: 1.2rem;
+                padding: 10px 0;
+            }
+        }
+
+        /* Updated Support Button */
+        .support-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .support-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 107, 0, 0.2);
+            color: #ff6b00;
+            border-radius: 30px;
+            padding: 10px 15px;
+            box-shadow: 0 0 10px rgba(255, 107, 0, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border: 1px solid rgba(255, 107, 0, 0.3);
+        }
+
+        .support-btn:hover {
+            background: rgba(255, 107, 0, 0.3);
+            box-shadow: 0 0 15px rgba(255, 107, 0, 0.5);
+        }
+
+        .support-text {
+            margin-left: 5px;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 640px) {
+            .navbar-links {
+                gap: 15px;
+            }
+
+            .support-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+
+            .support-text {
+                display: none;
+            }
+        }
         
         @media (max-width: 640px) {
             .form-container {
@@ -379,14 +532,7 @@
         }
     </style>
 </head>
-<body>
-    <!-- Admin Login Button (Top Right) -->
-    <div class="admin-btn">
-        <button class="neon-button flex items-center gap-2" onclick="window.location.href='/dashboard'">
-            <i class="bi bi-person-lock"></i>
-            <span class="hidden sm:inline">Admin Login</span>
-        </button>
-    </div>
+<body style="padding-top: 70px;">
 
     <!-- Main Form Container -->
     <div class="neon-border form-container pulse">
@@ -464,10 +610,12 @@
     </div>
 
     <!-- Support Button -->
-    <a href="/donasi" class="support-btn">
-        <i class="bi bi-heart-fill mr-2"></i>
-        <span>Support Us</span>
-    </a>
+    <div class="support-container">
+        <a href="/donasi" class="support-btn">
+            <i class="bi bi-heart-fill"></i>
+            <span class="support-text">Support</span>
+        </a>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">
@@ -489,24 +637,20 @@
         </div>
     </footer>
 
-    <!-- Floating particles for effect -->
-    <div class="particles">
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-        <div class="particle"></div>
-    </div>
+    <!-- Navbar -->
+    <nav class="neon-navbar">
+        <div class="navbar-container">
+            <a href="/" class="navbar-logo neon-text">AbsenSimkuliah</a>
+            <div class="menu-toggle" id="mobile-menu">
+                <i class="bi bi-list"></i>
+            </div>
+            <div class="navbar-links" id="navbar-links">
+                <a href="/" class="navbar-link">Beranda</a>
+                <a href="/daftar" class="navbar-link">Daftar</a>
+                <a href="/contact" class="navbar-link">Contact</a>
+            </div>
+        </div>
+    </nav>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -661,75 +805,6 @@
             });
         });
         
-        // Create floating particles
-        function createParticles() {
-            const container = document.querySelector('.particles');
-            if (!container) return;
-            
-            for (let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random position
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                
-                // Random size
-                const size = Math.random() * 4 + 1;
-                
-                // Random animation duration
-                const duration = Math.random() * 15 + 5;
-                const delay = Math.random() * 5;
-                
-                // Apply styles
-                particle.style.left = `${posX}%`;
-                particle.style.top = `${posY}%`;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.background = `rgba(0, 180, 255, ${Math.random() * 0.5 + 0.1})`;
-                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
-                
-                container.appendChild(particle);
-            }
-        }
-        
-        // Add floating animation to CSS
-        const style = document.createElement('style');
-        style.textContent = `
-            .particles {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-                z-index: -1;
-            }
-            
-            .particle {
-                position: absolute;
-                border-radius: 50%;
-                opacity: 0.8;
-            }
-            
-            @keyframes float {
-                0% {
-                    transform: translateY(0) translateX(0);
-                    opacity: 0.8;
-                }
-                50% {
-                    opacity: 0.3;
-                }
-                100% {
-                    transform: translateY(-100vh) translateX(20px);
-                    opacity: 0;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Initialize particles when DOM is loaded
-        document.addEventListener('DOMContentLoaded', createParticles);
 
 const jurusanList = [
   "d3-Teknik Listrik",
@@ -850,6 +925,25 @@ const jurusanList = [
         option.textContent = jurusan;
         selectElement.appendChild(option);
       });
+
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu');
+    const navbarLinks = document.getElementById('navbar-links');
+
+    mobileMenuBtn.addEventListener('click', () => {
+        navbarLinks.classList.toggle('active');
+        mobileMenuBtn.innerHTML = navbarLinks.classList.contains('active') 
+            ? '<i class="bi bi-x"></i>' 
+            : '<i class="bi bi-list"></i>';
+    });
+
+    // Close menu when clicking on a link
+    document.querySelectorAll('.navbar-link').forEach(link => {
+        link.addEventListener('click', () => {
+            navbarLinks.classList.remove('active');
+            mobileMenuBtn.innerHTML = '<i class="bi bi-list"></i>';
+        });
+    });
     </script>
 </body>
 </html>
