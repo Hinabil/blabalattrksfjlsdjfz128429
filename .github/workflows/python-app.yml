@@ -1,8 +1,6 @@
 name: Automate Absen
 
 on:
-  schedule:
-    - cron: '*/30 0-15 * * *' #otomatis
   workflow_dispatch:  # Jalan manual
 jobs:
   automate-absen:
