@@ -56,13 +56,6 @@ def page_not_found(error):
 def index():
     return app.send_static_file("index.html")
 
-@app.route("/daftar")
-def index():
-    return app.send_static_file("daftar.html")
-
-@app.route("/contact")
-def index():
-    return app.send_static_file("contact.html")
 
 @app.route("/donasi")
 def donasi():
