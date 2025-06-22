@@ -54,7 +54,7 @@ def page_not_found(error):
             
 @app.route("/")
 def index():
-    return app.send_static_file("beranda.html")
+    return app.send_static_file("index.html")
 
 @app.route("/daftar")
 def index():
