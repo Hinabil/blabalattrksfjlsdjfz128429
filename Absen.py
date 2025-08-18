@@ -39,7 +39,7 @@ def login(driver, nama, username, password):
         driver.find_element(By.XPATH, "//input[@placeholder='NIP/NPM']").send_keys(username)
         driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys(password)
         time.sleep(1)
-        driver.find_element(By.XPATH, "//button[text()='Login']").click()
+        driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
         time.sleep(2)
         take_screenshot(driver, "login_success", nama)
