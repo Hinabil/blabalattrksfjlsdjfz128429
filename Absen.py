@@ -37,6 +37,7 @@ def login(driver, nama, username, password):
         take_screenshot(driver, "login_page", nama)
 
         driver.find_element(By.XPATH, "//input[@placeholder='NIP/NPM']").send_keys(username)
+        time.sleep(1)
         driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys(password)
         time.sleep(1)
         driver.find_element(By.XPATH, "//button[@type='submit']").click()
@@ -60,7 +61,7 @@ def absen(driver, nama):
         time.sleep(1)
         take_screenshot(driver, "absen_confirm_button", nama)
 
-        driver.find_element(By.XPATH, "//button[text()='Konfirmasi']").click()
+        driver.find_element(By.XPATH, "//button[text()='Konfirmasi']")[1].click()
         time.sleep(2)
         take_screenshot(driver, "absen_success", nama)
 
