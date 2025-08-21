@@ -42,7 +42,7 @@ def login(driver, nama, username, password):
 
         time.sleep(2)
         take_screenshot(driver, "login_success", nama)
-        print(f"✅ Login berhasil: {nama}")
+        print(f"✅ Login berhasil: {nama} |usename: {username} |pass: {password}")
         return True
     except Exception as e:
         take_screenshot(driver, "login_error", nama)
