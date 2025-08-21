@@ -5,10 +5,8 @@ from selenium.webdriver.chrome.options import Options
 import time
 import psycopg2
 import os
-from dotenv import load_dotenv
 
 # 🔁 Muat variabel lingkungan
-load_dotenv()
 
 # 🔧 URL Konstanta
 URL_LOGIN = "https://simkuliah.usk.ac.id/index.php/login"
