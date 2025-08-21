@@ -32,13 +32,13 @@ def login(driver, nama, username, password):
     try:
         driver.get(URL_LOGIN)
         time.sleep(2)
-        take_screenshot(driver, "login_page", nama)
+        take_screenshot(driver, "login_page1", nama)
 
         driver.find_element(By.XPATH, "//input[@placeholder='NIP/NPM']").send_keys(username)
         time.sleep(1)
-        take_screenshot(driver, "login_page", nama)
+        take_screenshot(driver, "login_page2", nama)
         driver.find_element(By.XPATH, "//input[@placeholder='Password']").send_keys(password)
-        take_screenshot(driver, "login_page", nama)
+        take_screenshot(driver, "login_page3", nama)
         time.sleep(1)
         driver.find_element(By.XPATH, "//button[@type='submit']").click()
 
