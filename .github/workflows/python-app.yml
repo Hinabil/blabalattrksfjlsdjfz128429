@@ -46,7 +46,7 @@ jobs:
 
     - name: Run Selenium script with xvfb
       run: |
-        xvfb-run -a python script.py
+        xvfb-run -a python Absen.py
         
     - name: Create screenshots directory
       run: mkdir -p screenshots
