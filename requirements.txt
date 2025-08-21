@@ -1,4 +1,4 @@
-selenium==4.35.0
+selenium==4.0.0
 Flask
 requests
 psycopg2-binary
