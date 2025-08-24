@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://absensimkuliah.vercel.app/sitemap.xml
+Sitemap: https://abseninSimkuliah.vercel.app/sitemap.xml
